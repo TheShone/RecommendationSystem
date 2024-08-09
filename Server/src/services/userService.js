@@ -1,8 +1,4 @@
-const { runQuery, runUpdate, createTableUser } = require("./dbService");
-const { v4: uuidv4 } = require("uuid");
 const User = require("../models/User");
-const { loadCSVData } = require("./dbService");
-
 const pool = require("../../db");
 
 async function getAllUsers() {
