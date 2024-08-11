@@ -23,7 +23,8 @@ async function getUserById(id) {
           row.email,
           row.password,
           row.datebirth,
-          row.address
+          row.address,
+          row.photo
         );
         resolve(user);
       }
@@ -39,12 +40,13 @@ async function createUser(
   email,
   password,
   dateBirth,
-  address
+  address,
+  photo
 ) {
   return new Promise((resolve, reject) => {
     pool.query(
-      `INSERT INTO users (name, surname, username, email, password, datebirth, address) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [name, surname, username, email, password, dateBirth, address],
+      `INSERT INTO users (name, surname, username, email, password, datebirth, address, photo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [name, surname, username, email, password, dateBirth, address, photo],
       (err, resault) => {
         if (err) return reject(err);
         return resolve(resault.rows[0]);

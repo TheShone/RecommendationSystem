@@ -3,18 +3,26 @@ const express = require("express");
 const cors = require("cors");
 const userRouter = require("./src/routes/users");
 const brandRouter = require("./src/routes/brands");
+const attributeRouter = require("./src/routes/attributes");
 const productTypeRouter = require("./src/routes/productTypes");
+const productRouter = require("./src/routes/products");
+const productAtributeRouter = require("./src/routes/productAttributes");
+const purchaseHistoryRouter = require("./src/routes/purchaseHistory");
+const ratingRouter = require("./src/routes/ratings");
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-//initDatabase();
-
 app.use("/users", userRouter);
 app.use("/brands", brandRouter);
+app.use("/attributes", attributeRouter);
 app.use("/productTypes", productTypeRouter);
+app.use("/products", productRouter);
+app.use("/productAttributes", productAtributeRouter);
+app.use("/purchaseHistory", purchaseHistoryRouter);
+app.use("/ratings",ratingRouter);
 app.get("/", (req, res) => {
   res.send("Hallo World");
 });
