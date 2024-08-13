@@ -8,7 +8,8 @@ class User {
     password,
     dateBirth,
     address,
-    photo
+    photo,
+    role
   ) {
     this.id = id;
     this.name = name;
@@ -19,6 +20,7 @@ class User {
     this.dateBirth = dateBirth;
     this.address = address;
     this.photo = photo;
+    this.role = role;
   }
 }
 module.exports = User;
