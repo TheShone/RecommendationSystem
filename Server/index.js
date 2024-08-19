@@ -9,6 +9,7 @@ const productRouter = require("./src/routes/products");
 const productAtributeRouter = require("./src/routes/productAttributes");
 const purchaseHistoryRouter = require("./src/routes/purchaseHistory");
 const ratingRouter = require("./src/routes/ratings");
+const recommendationRouter = require('./src/routes/recommendations');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -23,6 +24,7 @@ app.use("/products", productRouter);
 app.use("/productAttributes", productAtributeRouter);
 app.use("/purchaseHistory", purchaseHistoryRouter);
 app.use("/ratings",ratingRouter);
+app.use("/recommendation",recommendationRouter);
 app.get("/", (req, res) => {
   res.send("Hallo World");
 });

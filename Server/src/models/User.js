@@ -9,7 +9,9 @@ class User {
     dateBirth,
     address,
     photo,
-    role
+    role,
+    type_id,
+    brand_id
   ) {
     this.id = id;
     this.name = name;
@@ -21,6 +23,8 @@ class User {
     this.address = address;
     this.photo = photo;
     this.role = role;
+    this.type_id = type_id;
+    this.brand_id = brand_id;
   }
 }
 module.exports = User;

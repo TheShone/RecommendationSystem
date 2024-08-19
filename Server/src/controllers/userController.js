@@ -54,6 +54,8 @@ async function createUser(req, res) {
       dateBirth,
       address,
       photo,
+      type_id,
+      brand_id,
     } = req.body;
     const response = await userService.createUser(
       name,
@@ -64,7 +66,9 @@ async function createUser(req, res) {
       dateBirth,
       address,
       photo,
-      "user"
+      "user",
+      type_id,
+      brand_id
     );
     res.status(201).json(response);
   } catch (err) {

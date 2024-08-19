@@ -26,7 +26,9 @@ async function getUserById(id) {
           row.datebirth,
           row.address,
           row.photo,
-          row.role
+          row.role,
+          row.type_id,
+          row.brand_id
         );
         resolve(user);
       }
@@ -53,7 +55,9 @@ async function getUserByEmail(email) {
             row.datebirth,
             row.address,
             row.photo,
-            row.role
+            row.role,
+            row.type_id,
+            row.brand_id
           );
           resolve(user);
         }
@@ -72,12 +76,14 @@ async function createUser(
   dateBirth,
   address,
   photo,
-  role
+  role,
+  type_id,
+  brand_id
 ) {
   return new Promise(async (resolve, reject) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     pool.query(
-      `INSERT INTO users (name, surname, username, email, password, datebirth, address, photo, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      `INSERT INTO users (name, surname, username, email, password, datebirth, address, photo, role, type_id,brand_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`,
       [
         name,
         surname,
@@ -88,6 +94,8 @@ async function createUser(
         address,
         photo,
         role,
+        type_id,
+        brand_id,
       ],
       (err, resault) => {
         if (err) return reject(err);
