@@ -34,13 +34,27 @@ async function loginUser(req, res) {
         {},
         (err, accessToken) => {
           if (err) throw "Error";
-          res.cookie("token", accessToken).json(loggedUser);
+          res
+            .cookie("token", accessToken, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV != "development",
+              sameSite: "strict",
+              maxAge: 30 * 24 * 60 * 60 * 1000,
+            })
+            .json(loggedUser);
         }
       );
     } else res.status(422).send("Wrong password");
   } catch (err) {
     return res.status(500).send(err);
   }
+}
+async function logoutUser(req, res) {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "Logged out successfully" });
 }
 
 async function createUser(req, res) {
@@ -121,4 +135,5 @@ module.exports = {
   deleteUser,
   loginUser,
   authenticateToken,
+  logoutUser,
 };

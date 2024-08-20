@@ -13,7 +13,12 @@ async function getRecommendations(userId) {
   const hasUserPurchaseHistory = await checkPurchaseHistoryByUser(userId, conn);
 
   if (hasUserPurchaseHistory) {
-    return await recommendBasedOnHistory(userId), conn;
+    const recommendedProducts = await recommendBasedOnHistory(userId, conn);
+    if (recommendedProducts && recommendedProducts.length > 0) {
+      console.log("PREOGROMNA PATKA");
+      return recommendedProducts;
+    } else return await recommendForNewUser(userId, conn);
+    
   } else {
     return await recommendForNewUser(userId, conn);
   }
@@ -44,6 +49,7 @@ async function recommendBasedOnHistory(userId, conn) {
     try {
       const similarUsers = await findSimilarUsers(userId, conn);
       console.log(similarUsers);
+
       let userPurchasedProducts = [];
       await conn.all(
         `
@@ -54,6 +60,8 @@ async function recommendBasedOnHistory(userId, conn) {
         (err, result) => {
           if (err) return reject(err);
           userPurchasedProducts = result.map((row) => row.product_id);
+
+          // Ako korisnik nema slične korisnike ili preporuke na osnovu sličnih korisnika nisu dovoljne, nastavi sa sličnim proizvodima
           conn.all(
             `
             SELECT DISTINCT p.id, p.name, p.description, p.price, p.photo,
@@ -61,8 +69,14 @@ async function recommendBasedOnHistory(userId, conn) {
             FROM db.public.purchasehistory ph
             JOIN db.public.products p ON ph.product_id = p.id
             LEFT JOIN db.public.ratings r ON p.id = r.product_id
-            WHERE ph.user_id IN (${similarUsers.join(",")})
-              AND p.id NOT IN (${userPurchasedProducts.join(",")})
+            WHERE ph.user_id IN (${
+              similarUsers.length ? similarUsers.join(",") : "-1"
+            })
+              AND p.id NOT IN (${
+                userPurchasedProducts.length
+                  ? userPurchasedProducts.join(",")
+                  : "-1"
+              })
             GROUP BY p.id, p.name, p.description, p.price, p.photo
             ORDER BY average_rating DESC, p.price ASC
             LIMIT 10
@@ -107,8 +121,9 @@ async function recommendBasedOnHistory(userId, conn) {
                         ...uniqueRecommendedProducts,
                         ...additionalRecommendedProducts,
                       ];
-
-                      resolve(finalRecommendations);
+                      if (finalRecommendations.length > 0)
+                        resolve(finalRecommendations);
+                      else resolve(recommendForNewUser(userId, conn));
                     }
                   );
                 } else {
@@ -130,6 +145,7 @@ async function recommendBasedOnHistory(userId, conn) {
 
 async function recommendForNewUser(userId, conn) {
   return new Promise((resolve, reject) => {
+    console.log("recomNewUsers");
     conn.all(
       `
         SELECT type_id, brand_id 
@@ -147,6 +163,7 @@ async function recommendForNewUser(userId, conn) {
           return resolve([]);
         }
         const { type_id, brand_id } = userPreferences[0];
+        console.log(type_id + " " + brand_id);
         conn.all(
           `
             SELECT p.id, p.name, p.description, p.price, p.photo,
@@ -161,6 +178,7 @@ async function recommendForNewUser(userId, conn) {
           `,
           (err, recommendedProducts) => {
             if (err) {
+              console.log(err);
               return reject(err);
             }
             resolve(recommendedProducts);
@@ -172,6 +190,7 @@ async function recommendForNewUser(userId, conn) {
 }
 async function findSimilarUsers(userId, conn) {
   try {
+    console.log("Krenuo");
     const similarUsersByPurchasePromise = new Promise((resolve, reject) => {
       conn.all(
         `
@@ -186,11 +205,8 @@ async function findSimilarUsers(userId, conn) {
         [userId],
         (err, result) => {
           if (err) return reject(err);
-          try {
-            resolve(result.map((row) => row.user_id));
-          } catch (err) {
-            reject(err);
-          }
+          resolve(result.map((row) => row.user_id));
+          reject(err);
         }
       );
     });

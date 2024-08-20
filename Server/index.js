@@ -9,13 +9,14 @@ const productRouter = require("./src/routes/products");
 const productAtributeRouter = require("./src/routes/productAttributes");
 const purchaseHistoryRouter = require("./src/routes/purchaseHistory");
 const ratingRouter = require("./src/routes/ratings");
-const recommendationRouter = require('./src/routes/recommendations');
+const recommendationRouter = require("./src/routes/recommendations");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 app.use("/users", userRouter);
 app.use("/brands", brandRouter);
 app.use("/attributes", attributeRouter);
@@ -23,8 +24,8 @@ app.use("/productTypes", productTypeRouter);
 app.use("/products", productRouter);
 app.use("/productAttributes", productAtributeRouter);
 app.use("/purchaseHistory", purchaseHistoryRouter);
-app.use("/ratings",ratingRouter);
-app.use("/recommendation",recommendationRouter);
+app.use("/ratings", ratingRouter);
+app.use("/recommendation", recommendationRouter);
 app.get("/", (req, res) => {
   res.send("Hallo World");
 });
