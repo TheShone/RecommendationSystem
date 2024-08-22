@@ -27,15 +27,20 @@ async function loginUser(req, res) {
     if (user == null) return res.status(422).json("User not found");
     const pass = bcrypt.compareSync(req.body.password, user.password);
     if (pass) {
-      const loggedUser = { id: user.id, email: user.email, role: user.role };
+      const loggedUser = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      };
       jwt.sign(
         loggedUser,
         process.env.ACCESS_TOKEN_SECRET,
-        {},
+        { expiresIn: "30d" },
         (err, accessToken) => {
           if (err) throw "Error";
           res
-            .cookie("token", accessToken, {
+            .cookie("jwt", accessToken, {
               httpOnly: true,
               secure: process.env.NODE_ENV != "development",
               sameSite: "strict",
@@ -50,7 +55,7 @@ async function loginUser(req, res) {
   }
 }
 async function logoutUser(req, res) {
-  res.cookie("token", "", {
+  res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
   });
