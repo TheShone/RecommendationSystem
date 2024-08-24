@@ -97,8 +97,16 @@ async function createUser(req, res) {
 }
 async function updateUser(req, res) {
   try {
-    const { name, surname, username, email, password, dateBirth, address } =
-      req.body;
+    const {
+      name,
+      surname,
+      username,
+      email,
+      password,
+      dateBirth,
+      address,
+      photo,
+    } = req.body;
     const updatedUser = await userService.updateUser(
       req.params.id,
       name,
@@ -107,7 +115,8 @@ async function updateUser(req, res) {
       email,
       password,
       dateBirth,
-      address
+      address,
+      photo
     );
     res.json(updatedUser);
   } catch (err) {

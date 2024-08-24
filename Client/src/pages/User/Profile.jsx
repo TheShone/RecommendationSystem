@@ -1,16 +1,22 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../../components/Loader";
-import "react-datepicker/dist/react-datepicker.css";
-import { useRegisterMutation } from "../../redux/api/usersApiSlice";
-import DatePicker from "react-datepicker";
 import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
+import { setCredientials } from "../../redux/features/auth/authSlice";
+import "react-datepicker/dist/react-datepicker.css";
+import { Link } from "react-router-dom";
+import { useUpdateProfileMutation } from "../../redux/api/usersApiSlice";
+import { useGetProfileQuery } from "../../redux/api/usersApiSlice";
+import DatePicker from "react-datepicker";
+import { FaCamera } from "react-icons/fa";
+import { Image } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
 import { storage } from "../../firabse";
-const Register = () => {
+import { v4 } from "uuid";
+
+const Profile = () => {
+  const icon = <FaCamera />;
   const [username, setUsername] = useState("");
   const [surname, setSurname] = useState("");
   const [name, setName] = useState("");
@@ -20,23 +26,37 @@ const Register = () => {
   const [dateBirth, setDateBirth] = useState("");
   const [address, setAddress] = useState("");
   const [photo, setPhoto] = useState("");
-  const { search } = useLocation();
-  const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || "/login";
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
-  const [register, { isLoading }] = useRegisterMutation();
+  const [newPhoto, setNewPhoto] = useState("");
+
+  const [updateProfile, { isLoading: loadingUpdateProfile }] =
+    useUpdateProfileMutation();
+  const {
+    data: profile,
+    isLoading: loadingGetProfile,
+    refetch,
+  } = useGetProfileQuery(userInfo.id);
   useEffect(() => {
-    if (userInfo) navigate(redirect);
-  }, [navigate, redirect, userInfo]);
-  const registUser = async (e) => {
+    if (profile) {
+      console.log(profile);
+      setUsername(profile.username);
+      setEmail(profile.email);
+      setName(profile.name);
+      setSurname(profile.surname);
+      setDateBirth(profile.dateBirth);
+      setAddress(profile.address);
+      setPhoto(profile.photo);
+    }
+  }, [profile]);
+  const dispatch = useDispatch();
+
+  const updateUser = async (e) => {
     e.preventDefault();
     if (password != confirmPassword) toast.error("Passwords do not match");
     else {
       try {
-        const imageRef = ref(storage, `users/${photo.name + v4()}`);
-        uploadBytes(imageRef, photo).then(() => {
+        const imageRef = ref(storage, `users/${newPhoto.name + v4()}`);
+        uploadBytes(imageRef, newPhoto).then(() => {
           getDownloadURL(imageRef).then(async (res) => {
             try {
               console.log({
@@ -47,9 +67,10 @@ const Register = () => {
                 password,
                 dateBirth,
                 address,
-                res,
+                photo: res,
               });
-              const addedUser = await register({
+              const updated = await updateProfile({
+                id: userInfo.id,
                 name,
                 surname,
                 username,
@@ -59,9 +80,17 @@ const Register = () => {
                 address,
                 photo: res,
               }).unwrap();
-              console.log("kraj");
-              toast.success(addedUser);
-              navigate(redirect);
+              toast.success("Profile successfully updated");
+              dispatch(
+                setCredientials({
+                  id: updated.id,
+                  username: updated.username,
+                  email: updated.email,
+                  role: updated.role,
+                })
+              );
+              console.log("kao");
+              refetch();
             } catch (error) {
               toast.error(error.data);
               console.log("Error:", error);
@@ -73,13 +102,21 @@ const Register = () => {
       }
     }
   };
-  return (
-    <section className="pl-[45rem] flex flex-wrap">
-      <div className="mt-[5rem] items-center">
-        <h1 className="text-2xl font-semibold mb-4">Register</h1>
 
-        <form onSubmit={registUser} className="container w-[60rem]">
-          <div className="my-[2rem]">
+  return (
+    <section className="pl-[30rem] flex flex-wrap">
+      <div className="mt-[2rem] items-center">
+        <form onSubmit={updateUser} className="container w-[60rem]">
+          <div className="my-[1rem]">
+            <Image
+              src={photo}
+              indicatorIcon={icon}
+              alt="Image"
+              preview
+              className="w-[250px] h-[250px] object-cover"
+            />
+          </div>
+          <div className="my-[1rem]">
             <label htmlFor="name" className="block text-sm font-medium">
               Name
             </label>
@@ -92,7 +129,7 @@ const Register = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="surname" className="block text-sm font-medium">
               Surname
             </label>
@@ -105,7 +142,7 @@ const Register = () => {
               onChange={(e) => setSurname(e.target.value)}
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="username" className="block text-sm font-medium">
               Username
             </label>
@@ -118,7 +155,7 @@ const Register = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="email" className="block text-sm font-medium">
               Email Address
             </label>
@@ -132,7 +169,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="password" className="block text-sm font-medium">
               Password
             </label>
@@ -146,7 +183,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label
               htmlFor="confirmPassword"
               className="block text-sm font-medium"
@@ -162,7 +199,7 @@ const Register = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="Date birth" className="block text-sm font-medium">
               Date birth
             </label>
@@ -172,7 +209,7 @@ const Register = () => {
               icon="fa fa-calendar"
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="Address" className="block text-sm font-medium">
               Address
             </label>
@@ -185,7 +222,7 @@ const Register = () => {
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div className="my-[2rem]">
+          <div className="my-[1rem]">
             <label htmlFor="Photo" className="block text-sm font-medium">
               Photo
             </label>
@@ -194,30 +231,19 @@ const Register = () => {
               id="photo"
               className="mt-1 p-2 border rounded w-full"
               placeholder="Address"
-              onChange={(e) => setPhoto(e.target.files[0])}
+              onChange={(e) => setNewPhoto(e.target.files[0])}
             />
           </div>
-
           <button
             type="submit"
             className="bg-black text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
-          >Register</button>
+          >
+            Update
+          </button>
         </form>
-
-        <div className="mt-4">
-          <p className="text-black">
-            Already have an account?{" "}
-            <Link
-              to={redirect ? `/login?redirect=${redirect}` : "/login"}
-              className="text-black hover:underline"
-            >
-              Login
-            </Link>
-          </p>
-        </div>
       </div>
     </section>
   );
 };
 
-export default Register;
+export default Profile;

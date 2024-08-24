@@ -14,6 +14,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../../redux/api/usersApiSlice";
 import { logout } from "../../redux/features/auth/authSlice";
 import { CiLogout } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
+import { PiUserListDuotone } from "react-icons/pi";
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -78,18 +80,26 @@ const Navigation = () => {
           <FaHeart className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">FAVORITE</span>{" "}
         </Link>
-      </div>
-      <div className="relative">
-        <button
-          onClick={toggleDropdown}
-          className="flex items-center text-gray-8000 focus:outline-none"
-        >
-          {userInfo ? (
-            <span className="text-white">{userInfo.username}</span>
-          ) : (
-            <></>
-          )}
-        </button>
+        {userInfo && (
+          <Link
+            to="/profile"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <CgProfile className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              {userInfo.username}
+            </span>{" "}
+          </Link>
+        )}
+        {userInfo && userInfo.role == "admin" && (
+          <Link
+            to="/admin/userList"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <PiUserListDuotone className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">Users</span>{" "}
+          </Link>
+        )}
       </div>
       {!userInfo && (
         <ul>
@@ -117,8 +127,8 @@ const Navigation = () => {
       )}
       {userInfo && (
         <Link className="flex items-center transition-transform transform hover:translate-x-2">
-          <CiLogout className="mr-2 mt-[3rem]" size={26} onClick={logOut} />
-          <span className="hidden nav-item-name mt-[3rem]" onClick={logOut}>
+          <CiLogout className="mr-2 " size={26} onClick={logOut} />
+          <span className="hidden nav-item-name " onClick={logOut}>
             LOGOUT
           </span>{" "}
         </Link>

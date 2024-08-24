@@ -113,13 +113,35 @@ async function updateUser(
   email,
   password,
   dateBirth,
-  address
+  address,
+  photo
 ) {
   return new Promise(async (resolve, reject) => {
+    console.log({
+      id,
+      name,
+      surname,
+      username,
+      email,
+      password,
+      dateBirth,
+      address,
+      photo,
+    });
     const hashedPassword = await bcrypt.hash(password, 10);
     pool.query(
-      "UPDATE users SET name = $1,surname= $2,username=$3,email=$4,password=$5,dateBirth=$6,address=$7 WHERE id = $8 RETURNING *",
-      [name, surname, username, email, hashedPassword, dateBirth, address, id],
+      "UPDATE users SET name = $1,surname= $2,username=$3,email=$4,password=$5,dateBirth=$6,address=$7,photo=$8 WHERE id = $9 RETURNING *",
+      [
+        name,
+        surname,
+        username,
+        email,
+        hashedPassword,
+        dateBirth,
+        address,
+        photo,
+        id,
+      ],
       (err, result) => {
         if (err) throw reject(err);
         return resolve(result.rows[0]);
