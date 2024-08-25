@@ -1,4 +1,4 @@
-const userService = require("../services/userService");
+const userService = require("c:/Fax/Cetvrta godina/Diplomski/RecommendationSystem/server/src/services/userService.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 

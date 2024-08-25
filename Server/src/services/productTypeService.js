@@ -18,6 +18,14 @@ async function getProductTypeById(id) {
     });
   });
 }
+async function getProductTypeByName(name) {
+  return new Promise((resolve, reject) => {
+    pool.query(`SELECT * FROM productType WHERE name=$1`, [name], (err, result) => {
+      if (err) return reject(err);
+      resolve(result.rows[0]);
+    });
+  });
+}
 async function updateProductType(id, name) {
   return new Promise((resolve, reject) => {
     pool.query(
@@ -57,4 +65,5 @@ module.exports = {
   createProductType,
   updateProductType,
   deleteProductType,
+  getProductTypeByName
 };

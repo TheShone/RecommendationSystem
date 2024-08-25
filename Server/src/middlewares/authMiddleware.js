@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const userService = require("../services/userService");
+const userService = require("c:/Fax/Cetvrta godina/Diplomski/RecommendationSystem/server/src/services/userService.js");
 async function authenticate(req, res, next) {
   var token = req.cookies.jwt;
   if (token) {

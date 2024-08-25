@@ -21,8 +21,13 @@ async function getProductTypeById(req, res) {
 async function createProductType(req, res) {
   try {
     const name = req.body.name;
-    const productType = await productTypeService.createProductType(name);
-    res.status(200).json(productType);
+    const existingType = await productTypeService.getProductTypeByName(name);
+    if (!existingType) {
+      const productType = await productTypeService.createProductType(name);
+      res.status(200).json(productType);
+    } else {
+      res.status(409).json("Already exists that type of product type");
+    }
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -41,9 +46,9 @@ async function deleteProductType(req, res) {
   try {
     const id = req.params.id;
     await productTypeService.deleteProductType(id);
-    res.status(200).send("Product Type successfully deleted");
+    res.status(200).json({ message: "Product Type successfully deleted" });
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).json(err.message);
   }
 }
 module.exports = {

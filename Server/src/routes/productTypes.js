@@ -8,11 +8,14 @@ const {
 } = require("../controllers/productTypeContoller");
 
 const router = express.Router();
-
+const {
+  authenticate,
+  authorizedAdmin,
+} = require("../middlewares/authMiddleware");
 router.get("/", getProductTypes);
 router.get("/:id", getProductTypeById);
-router.post("/", createProductType);
-router.put("/:id", updateProductType);
-router.delete("/:id", deleteProductType);
+router.post("/", authenticate, authorizedAdmin, createProductType);
+router.put("/:id", authenticate, authorizedAdmin, updateProductType);
+router.delete("/:id", authenticate, authorizedAdmin, deleteProductType);
 
 module.exports = router;
