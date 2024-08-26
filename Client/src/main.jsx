@@ -16,6 +16,7 @@ import store from "./redux/store.js";
 import UserList from "./pages/Admin/UserList.jsx";
 import ProductTypesList from "./pages/Admin/ProductTypesList.jsx";
 import BrandsList from "./pages/Admin/BrandsList.jsx";
+import AttributesList from './pages/Admin/AttributesList.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
         <Route path="userList" element={<UserList />} />
         <Route path="productTypesList" element={<ProductTypesList />} />
         <Route path="brandsList" element={<BrandsList />} />
+        <Route path="attributesList" element={<AttributesList />} />
       </Route>
     </Route>
   )

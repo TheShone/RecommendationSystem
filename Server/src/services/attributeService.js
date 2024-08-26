@@ -2,10 +2,13 @@ const pool = require("../../db");
 
 async function getAttributes() {
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM attributes", (err, result) => {
-      if (err) return reject(err);
-      resolve(result.rows);
-    });
+    pool.query(
+      "SELECT a.id,a.name as attributeName,p.name as Categorie, p.id as type_id FROM attributes as a left join producttype as p on a.type_id=p.id ORDER BY id ASC ",
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result.rows);
+      }
+    );
   });
 }
 

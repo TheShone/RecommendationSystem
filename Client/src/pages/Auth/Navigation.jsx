@@ -18,6 +18,7 @@ import { CgProfile } from "react-icons/cg";
 import { PiUserListDuotone } from "react-icons/pi";
 import { TbBrandBooking } from "react-icons/tb";
 import { BiCategoryAlt } from "react-icons/bi";
+import { IoMdAddCircle } from "react-icons/io";
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -68,6 +69,7 @@ const Navigation = () => {
           <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
         </Link>
+        {userInfo && userInfo.role == "user" &&(
         <Link
           to="/cart"
           className="flex items-center transition-transform transform hover:translate-x-2"
@@ -75,6 +77,7 @@ const Navigation = () => {
           <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
         </Link>
+        )}
         {userInfo && (
           <Link
             to="/profile"
@@ -111,6 +114,15 @@ const Navigation = () => {
           >
             <BiCategoryAlt   className="mr-2 mt-[3rem]" size={26} />
             <span className="hidden nav-item-name mt-[3rem]">Categories</span>{" "}
+          </Link>
+        )}
+        {userInfo && userInfo.role == "admin" && (
+          <Link
+            to="/admin/attributesList"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <IoMdAddCircle   className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">Attributes</span>{" "}
           </Link>
         )}
       </div>

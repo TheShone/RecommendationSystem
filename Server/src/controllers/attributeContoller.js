@@ -43,7 +43,7 @@ async function deleteAttribute(req, res) {
   try {
     const id = req.params.id;
     await attributeService.deleteAttribute(id);
-    res.status(200).send("Attribute successfully deleted");
+    res.status(200).json("Attribute successfully deleted");
   } catch (err) {
     res.status(500).send(err.message);
   }
