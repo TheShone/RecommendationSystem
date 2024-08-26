@@ -41,7 +41,7 @@ async function deleteBrand(req, res) {
   try {
     const id = req.params.id;
     await brandsService.deleteBrand(id);
-    res.status(200).send("Brand successfully deleted");
+    res.status(200).json("Brand successfully deleted");
   } catch (err) {
     res.status(500).send(err.message);
   }

@@ -8,10 +8,14 @@ const {
 } = require("../controllers/attributeContoller");
 
 const router = express.Router();
+const {
+  authenticate,
+  authorizedAdmin,
+} = require("../middlewares/authMiddleware");
 router.get("/", getAttributes);
 router.get("/:id", getAttributeById);
-router.post("/", createAttribute);
-router.put("/:id", updateAttribute);
-router.delete("/:id", deleteAttribute);
+router.post("/", authenticate, authorizedAdmin, createAttribute);
+router.put("/:id", authenticate, authorizedAdmin, updateAttribute);
+router.delete("/:id", authenticate, authorizedAdmin, deleteAttribute);
 
 module.exports = router;
