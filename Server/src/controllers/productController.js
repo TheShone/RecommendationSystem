@@ -2,8 +2,13 @@ const productService = require("../services/productService");
 
 async function getAllProducts(req, res) {
   try {
-    const products = await productService.getProducts();
-    res.status(200).json(products);
+    const { products, page, pages, hasMore } = await productService.getProducts(req.query.page);
+        res.status(200).json({
+      products,
+      page,
+      pages,
+      hasMore,
+    });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -21,8 +26,16 @@ async function getProductById(req, res) {
 }
 async function createProduct(req, res) {
   try {
-    const { name, description, price, brand_id, type_id, created_at, photo } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      brand_id,
+      type_id,
+      created_at,
+      photo,
+      quantity,
+    } = req.body;
     const response = await productService.createProduct(
       name,
       description,
@@ -30,7 +43,8 @@ async function createProduct(req, res) {
       brand_id,
       type_id,
       created_at,
-      photo
+      photo,
+      quantity
     );
     res.status(201).json(response);
   } catch (err) {
@@ -40,8 +54,16 @@ async function createProduct(req, res) {
 }
 async function updateProduct(req, res) {
   try {
-    const { name, description, price, brand_id, type_id, created_at, photo } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      brand_id,
+      type_id,
+      created_at,
+      photo,
+      quantity,
+    } = req.body;
     const updatedProduct = await productService.updateProduct(
       req.params.id,
       name,
@@ -50,7 +72,8 @@ async function updateProduct(req, res) {
       brand_id,
       type_id,
       created_at,
-      photo
+      photo,
+      quantity
     );
     res.json(updatedProduct);
   } catch (err) {
@@ -60,7 +83,7 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
   try {
     await productService.deleteProduct(req.params.id);
-    res.status(204).send();
+    res.status(204).json("Succesfully deleted");
   } catch (err) {
     res.status(500).send(err.message);
   }

@@ -23,6 +23,12 @@ export const attributesApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    getAttributesPerType: builder.query({
+      query: ({ id }) => ({
+        url: `${ATTRIBUTES_URL}/perType/${id}`,
+        method: "GET",
+      }),
+    }),
     getAttributes: builder.query({
       query: () => ({
         url: `${ATTRIBUTES_URL}`,
@@ -35,4 +41,5 @@ export const {
   useUpdateAttributeMutation,
   useDeleteAttributeMutation,
   useGetAttributesQuery,
+  useGetAttributesPerTypeQuery,
 } = attributesApiSlice;

@@ -3,3 +3,7 @@ export const USERS_URL = "/users";
 export const PRODUCT_TYPES_URL = "/productTypes";
 export const BRANDS_URL = "/brands";
 export const ATTRIBUTES_URL = "/attributes";
+export const PRODUCTES_URL = "/products";
+export const RECOMMENDATION_URL = "/recommendation";
+export const RATINGS_URL = "/ratings";
+export const PRODUCT_ATTRIBUTES_URL = "/productAttributes"

@@ -8,6 +8,17 @@ async function getAttributes(req, res) {
     res.status(500).send(err.message);
   }
 }
+async function getAttributesPerProductType(req, res) {
+  try {
+    const type_id = req.params.id;
+    const attributes = await attributeService.getAttributesPerProductType(
+      type_id
+    );
+    res.status(200).json(attributes);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
 async function getAttributeById(req, res) {
   try {
     const id = req.params.id;
@@ -54,4 +65,5 @@ module.exports = {
   createAttribute,
   updateAttribute,
   deleteAttribute,
+  getAttributesPerProductType,
 };

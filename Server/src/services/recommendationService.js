@@ -61,7 +61,6 @@ async function recommendBasedOnHistory(userId, conn) {
           if (err) return reject(err);
           userPurchasedProducts = result.map((row) => row.product_id);
 
-          // Ako korisnik nema slične korisnike ili preporuke na osnovu sličnih korisnika nisu dovoljne, nastavi sa sličnim proizvodima
           conn.all(
             `
             SELECT DISTINCT p.id, p.name, p.description, p.price, p.photo,

@@ -19,6 +19,7 @@ import { PiUserListDuotone } from "react-icons/pi";
 import { TbBrandBooking } from "react-icons/tb";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoMdAddCircle } from "react-icons/io";
+import { FaProductHunt } from "react-icons/fa";
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -62,21 +63,24 @@ const Navigation = () => {
           <AiOutlineHome className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">HOME</span>{" "}
         </Link>
-        <Link
-          to="/shop"
-          className="flex items-center transition-transform transform hover:translate-x-2"
-        >
-          <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
-        </Link>
-        {userInfo && userInfo.role == "user" &&(
-        <Link
-          to="/cart"
-          className="flex items-center transition-transform transform hover:translate-x-2"
-        >
-          <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
-        </Link>
+        {!userInfo ||
+          (userInfo.role == "user" && (
+            <Link
+              to="/shop"
+              className="flex items-center transition-transform transform hover:translate-x-2"
+            >
+              <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
+              <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
+            </Link>
+          ))}
+        {userInfo && userInfo.role == "user" && (
+          <Link
+            to="/cart"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
+          </Link>
         )}
         {userInfo && (
           <Link
@@ -103,7 +107,7 @@ const Navigation = () => {
             to="/admin/brandsList"
             className="flex items-center transition-transform transform hover:translate-x-2"
           >
-            <TbBrandBooking  className="mr-2 mt-[3rem]" size={26} />
+            <TbBrandBooking className="mr-2 mt-[3rem]" size={26} />
             <span className="hidden nav-item-name mt-[3rem]">Brands</span>{" "}
           </Link>
         )}
@@ -112,8 +116,10 @@ const Navigation = () => {
             to="/admin/producttypeslist"
             className="flex items-center transition-transform transform hover:translate-x-2"
           >
-            <BiCategoryAlt   className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Categories</span>{" "}
+            <BiCategoryAlt className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              Categories
+            </span>{" "}
           </Link>
         )}
         {userInfo && userInfo.role == "admin" && (
@@ -121,8 +127,21 @@ const Navigation = () => {
             to="/admin/attributesList"
             className="flex items-center transition-transform transform hover:translate-x-2"
           >
-            <IoMdAddCircle   className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Attributes</span>{" "}
+            <IoMdAddCircle className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              Attributes
+            </span>{" "}
+          </Link>
+        )}
+        {userInfo && userInfo.role == "admin" && (
+          <Link
+            to="/admin/productesList"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <FaProductHunt className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              Productes
+            </span>{" "}
           </Link>
         )}
       </div>

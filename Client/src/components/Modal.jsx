@@ -5,8 +5,8 @@ const Modal = ({ isOpen, onClose, children }) => {
     <>
       {isOpen && (
         <div className="fixed inset-0 flex-items-center justify-center z-50">
-          <div className="fixed inset-0 bg-gray-500 opacity-50">
-            <div className="absolute top-[40%] right-[50%] bg-black p-4 rounded-lg z-10 text-right">
+          <div className="fixed inset-0 bg-gray-500 opacity-95">
+            <div className="absolute top-[40%] right-[50%] bg-white p-4 rounded-lg z-10 text-right">
               <button
                 className="text-gray-500 font-semibold hover:text-gray-700 focus:outline-none mr-2"
                 onClick={onClose}

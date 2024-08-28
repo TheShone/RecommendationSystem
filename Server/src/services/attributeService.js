@@ -11,7 +11,18 @@ async function getAttributes() {
     );
   });
 }
-
+async function getAttributesPerProductType(type_id) {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `SELECT a.id,a.name as attributeName,p.name as Categorie, p.id as type_id FROM attributes as a left join producttype as p on a.type_id=p.id WHERE p.id=$1 ORDER BY id ASC `,
+      [type_id],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result.rows);
+      }
+    );
+  });
+}
 async function getAttributeById(id) {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM attributes WHERE id=$1`, [id], (err, result) => {
@@ -59,4 +70,5 @@ module.exports = {
   createAttribute,
   updateAttribute,
   deleteAttribute,
+  getAttributesPerProductType,
 };

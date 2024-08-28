@@ -5,6 +5,7 @@ const {
   getAttributeById,
   updateAttribute,
   deleteAttribute,
+  getAttributesPerProductType,
 } = require("../controllers/attributeContoller");
 
 const router = express.Router();
@@ -14,6 +15,7 @@ const {
 } = require("../middlewares/authMiddleware");
 router.get("/", getAttributes);
 router.get("/:id", getAttributeById);
+router.get("/perType/:id", getAttributesPerProductType);
 router.post("/", authenticate, authorizedAdmin, createAttribute);
 router.put("/:id", authenticate, authorizedAdmin, updateAttribute);
 router.delete("/:id", authenticate, authorizedAdmin, deleteAttribute);

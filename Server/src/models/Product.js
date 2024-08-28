@@ -7,7 +7,8 @@ class Product {
     brand_id,
     type_id,
     created_at,
-    photo
+    photo,
+    quantity
   ) {
     this.id = id;
     this.name = name;
@@ -17,6 +18,7 @@ class Product {
     this.type_id = type_id;
     this.created_at = created_at;
     this.photo = photo;
+    this.quantity = quantity;
   }
 }
 module.exports = Product;
