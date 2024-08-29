@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineDoNotDisturbAlt } from "react-icons/md";
 import { CiCircleCheck } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
-
+import AdminMenu from "./AdminMenu";
 import {
   useGetUsersQuery,
   useDeleteUserMutation,
@@ -35,6 +35,7 @@ const UserList = () => {
         <Loader />
       ) : (
         <div className="flex flex-col md:flex-row">
+          <AdminMenu/>
           <table className="w-full md:w-4-5 mx-auto">
             <thead>
               <tr>

@@ -9,6 +9,7 @@ import {
 } from "../../redux/api/brandsApiSlice";
 import BrandForm from "../../components/NameForm";
 import Modal from "../../components/Modal";
+import AdminMenu from "./AdminMenu";
 const BrandsList = () => {
   const { data: brands, refetch } = useGetBrandsQuery();
   const [name, setName] = useState("");
@@ -89,6 +90,7 @@ const BrandsList = () => {
   return (
     <div className="ml-[10rem] flex flex-col md:flex-row">
       <div className="md:w-3/4 p-3">
+      <AdminMenu/>
         <div className="h-12">Manage Brands</div>
         <BrandForm
           value={name}

@@ -5,6 +5,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  fetchAllProducts
 } = require("../controllers/productController");
 const router = express.Router();
 const {
@@ -13,6 +14,7 @@ const {
 } = require("../middlewares/authMiddleware");
 
 router.get("/", getAllProducts);
+router.get("/all", fetchAllProducts);
 router.get("/:id", getProductById);
 router.post("/", authenticate, authorizedAdmin, createProduct);
 router.put("/:id", authenticate, authorizedAdmin, updateProduct);

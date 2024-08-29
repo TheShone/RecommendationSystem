@@ -2,13 +2,23 @@ const productService = require("../services/productService");
 
 async function getAllProducts(req, res) {
   try {
-    const { products, page, pages, hasMore } = await productService.getProducts(req.query.page);
-        res.status(200).json({
+    const { products, page, pages, hasMore } = await productService.getProducts(
+      req.query.page
+    );
+    res.status(200).json({
       products,
       page,
       pages,
       hasMore,
     });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+async function fetchAllProducts(req, res) {
+  try {
+    const products = await productService.getAllProducts();
+    res.status(200).json(products);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -82,8 +92,9 @@ async function updateProduct(req, res) {
 }
 async function deleteProduct(req, res) {
   try {
-    await productService.deleteProduct(req.params.id);
-    res.status(204).json("Succesfully deleted");
+    console.log(req.params.id);
+    const result = await productService.deleteProduct(req.params.id);
+    res.status(204).json(result);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -94,4 +105,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  fetchAllProducts,
 };

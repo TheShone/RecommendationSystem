@@ -19,7 +19,7 @@ export const productesApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     allProducts: builder.query({
-      query: () => `${PRODUCTES_URL}`,
+      query: () => `${PRODUCTES_URL}/all`,
     }),
     getProductDetails: builder.query({
       query: (productId) => ({
@@ -43,8 +43,8 @@ export const productesApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteProduct: builder.mutation({
-      query: (productId) => ({
-        url: `${PRODUCTES_URL}/${productId}`,
+      query: (id) => ({
+        url: `${PRODUCTES_URL}/${id}`,
         method: "DELETE",
       }),
       providesTags: ["Product"],
@@ -62,11 +62,11 @@ export const productesApiSlice = apiSlice.injectEndpoints({
       }),
     }),
   }),
-  
 });
 export const {
   useGetProductByIdQuery,
   useGetProductsQuery,
+  useAllProductsQuery,
   useGetProductDetailsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,

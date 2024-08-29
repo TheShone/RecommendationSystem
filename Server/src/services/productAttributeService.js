@@ -3,7 +3,7 @@ const pool = require("../../db");
 async function getProductAttributes(id) {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT name, value FROM productAttributes pa JOIN attributes a ON pa.attribute_id=a.id WHERE pa.product_id=$1",
+      "SELECT * FROM productAttributes pa JOIN attributes a ON pa.attribute_id=a.id WHERE pa.product_id=$1",
       [id],
       (err, result) => {
         if (err) return reject(err);

@@ -55,13 +55,13 @@ const Navigation = () => {
       } xl:flex lg:flex md:hidden sm:hidden flex-col justify-between p-4 text-white bg-black w-[4%] hover:w-[15%] h-[100vh] fixed`}
       id="navigation-container"
     >
-      <div className="flex flex-col justify-center space-y-4">
+      <div className="flex flex-col justify-center space-y-2">
         <Link
           to="/"
-          className="flex items-center transition-transform transform hover:translate-x-2"
+          className="flex items-center transition-transform transform hover:translate-x-1"
         >
-          <AiOutlineHome className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">HOME</span>{" "}
+          <AiOutlineHome className="mr-2 mt-[2rem]" size={26} />
+          <span className="hidden nav-item-name mt-[2rem]">HOME</span>{" "}
         </Link>
         {!userInfo ||
           (userInfo.role == "user" && (
@@ -73,7 +73,7 @@ const Navigation = () => {
               <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
             </Link>
           ))}
-        {userInfo && userInfo.role == "user" && (
+        
           <Link
             to="/cart"
             className="flex items-center transition-transform transform hover:translate-x-2"
@@ -81,7 +81,7 @@ const Navigation = () => {
             <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
             <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
           </Link>
-        )}
+        
         {userInfo && (
           <Link
             to="/profile"

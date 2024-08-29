@@ -9,6 +9,7 @@ import {
 } from "../../redux/api/productTypesApiSlice";
 import ProductTypeForm from "../../components/NameForm";
 import Modal from "../../components/Modal";
+import AdminMenu from "./AdminMenu";
 const ProductTypesList = () => {
   const { data: productTypes, refetch } = useGetProductTypesQuery();
   const [name, setName] = useState("");
@@ -89,6 +90,7 @@ const ProductTypesList = () => {
   return (
     <div className="ml-[10rem] flex flex-col md:flex-row">
       <div className="md:w-3/4 p-3">
+      <AdminMenu/>
         <div className="h-12">Manage Product Types</div>
         <ProductTypeForm
           value={name}

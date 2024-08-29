@@ -29,6 +29,14 @@ async function getProducts(page = 1) {
     throw new Error(err.message);
   }
 }
+async function getAllProducts() {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM products", (err, results) => {
+      if (err) return reject(err);
+      resolve(results.rows);
+    });
+  });
+} 
 async function getProductById(id) {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM products WHERE id=${id}`, (err, results) => {
@@ -114,6 +122,7 @@ async function deleteProduct(id) {
 module.exports = {
   getProducts,
   getProductById,
+  getAllProducts,
   updateProduct,
   createProduct,
   deleteProduct,

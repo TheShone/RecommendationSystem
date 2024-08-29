@@ -1,45 +1,74 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../../components/Modal";
 import {
-  useGetProductByIdQuery,
-  useGetProductsQuery,
-  useGetProductDetailsQuery,
-  useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetProductByIdQuery,
+  useGetProductAttributesQuery,
 } from "../../redux/api/productApiSlice";
-import {
-  useGetRatingsQuery,
-  useCreateRatingMutation,
-} from "../../redux/api/ratingesApiSlice";
 import { useGetProductTypesQuery } from "../../redux/api/productTypesApiSlice";
 import { useGetBrandsQuery } from "../../redux/api/brandsApiSlice";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../firabse";
-import { ProductAttributeForm } from "../../components/ProductAttributeForm";
 import AdminMenu from "./AdminMenu";
-const ProductesList = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [brand, setBrand] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [photo, setPhoto] = useState("");
-  const navigate = useNavigate();
-  const [createProduct] = useCreateProductMutation();
-  const { data: categories } = useGetProductTypesQuery();
-  const { data: brands } = useGetBrandsQuery();
-  const [imageUrl, setImageUrl] = useState("");
-  const { data: productTypes, isLoading } = useGetProductTypesQuery();
-  const [addAttributVisible, setAddAttributeVisible] = useState(false);
-  const [addedProductId, setAddedProductId] = useState("");
+const UpdateProduct = () => {
+  const params = useParams();
+  const {
+    data: productData,
+    refetch,
+    isLoading,
+  } = useGetProductByIdQuery(params.id);
+  const [image, setImage] = useState(productData?.photo || "");
+  const [name, setName] = useState(productData?.name || "");
   const [modalVisable, setModalVisable] = useState("");
-  const clickHandler = async () => {
+  const [description, setDescription] = useState(
+    productData?.description || ""
+  );
+  const [price, setPrice] = useState(productData?.price || "");
+  const { data: attributes } = useGetProductAttributesQuery(productData?.id);
+  const [category, setCategory] = useState(productData?.category || "");
+  const [brand, setBrand] = useState(productData?.brand || "");
+  const [quantity, setQuantity] = useState(productData?.quantity || "");
+  const [reff, setRef] = useState(false);
+  const navigate = useNavigate();
+  const { data: categories = [] } = useGetProductTypesQuery();
+  const { data: brands } = useGetBrandsQuery();
+  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+  const [updatedProductId, setUpdatedProductId] = useState("");
+  const [updateAttributeVisible, setUpdateAttributeVisible] = useState("");
+  const handleDelete = async () => {
+    try {
+      if (updatedProductId) {
+        let answer = window.confirm(
+          "Are you sure that you want to delete this product?"
+        );
+        if (!answer) return;
+        console.log(updatedProductId);
+        const result = await deleteProduct(productData.id).unwrap();
+        toast.success(result);
+        navigate("/admin/allproductslist");
+        setRef(!reff);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error");
+    }
+  };
+  const uploadFileHandler = (path) => {
+    const imageRef = ref(storage, `products/${path.name + v4()}`);
+    uploadBytes(imageRef, path).then(() => {
+      getDownloadURL(imageRef).then(async (res) => {
+        setImage(res);
+        console.log("nakon uloada" + image);
+      });
+    });
+  };
+  const handleUpdate = async () => {
     if (
       !name ||
       !description ||
@@ -47,40 +76,32 @@ const ProductesList = () => {
       !category ||
       !brand ||
       !quantity ||
-      !imageUrl
+      !image
     ) {
       toast.error("Enter all fields");
       return;
     } else {
       try {
-        console.log({
-          name,
-          description,
-          price,
-          brand_id: brand,
-          type_id: category,
-          created_at: new Date(),
-          photo: imageUrl,
-          quantity,
-        });
-        const result = await createProduct({
-          name,
-          description,
-          price,
-          brand_id: brand,
-          type_id: category,
-          created_at: new Date(),
-          photo: imageUrl,
-          quantity,
+        console.log("U update" + image);
+        const result = await updateProduct({
+          productId: updatedProductId,
+          formData: {
+            name,
+            description,
+            price,
+            brand_id: brand,
+            type_id: category,
+            created_at: new Date(),
+            photo: image,
+            quantity,
+          },
         }).unwrap();
         if (result.error) {
           toast.error(result.error);
         } else {
-          setAddedProductId(result.id);
-          setAddAttributeVisible(true);
-          toast.success(
-            `${result.name} is created, now you can add attributes to it`
-          );
+          toast.success(`${result.name} is updated`);
+          refetch();
+          setRef(!reff);
         }
       } catch (error) {
         console.log(error);
@@ -88,42 +109,41 @@ const ProductesList = () => {
       }
     }
   };
-  const uploadFileHandler = (path) => {
-    const imageRef = ref(storage, `products/${path.name + v4()}`);
-    uploadBytes(imageRef, path).then(() => {
-      getDownloadURL(imageRef).then(async (res) => {
-        setPhoto(path);
-        setImageUrl(res);
-      });
-    });
-  };
-  const attributeHandler = () => {
-    setModalVisable(true);
-  };
+  useEffect(() => {
+    console.log(productData);
+    if (productData && productData.id) {
+      setUpdatedProductId(productData.id);
+      setName(productData.name);
+      setDescription(productData.description);
+      setPrice(productData.price);
+      setCategory(productData.type_id);
+      setBrand(productData.brand_id);
+      setQuantity(productData.quantity);
+      setImage(productData.photo);
+    }
+  }, [productData, reff]);
   return (
     <div className="container xl:mx-[9rem] sm:mx-[0]">
       <div className="flex flex-col md:flex-row">
-        <AdminMenu/>
+        <AdminMenu />
         <div className="md:w-3/4 p-3">
-          <div className="h-1">Create Product</div>
-          {imageUrl && (
+          <div className="h-3 text-lg font-bold">Update Product</div>
+          {image && (
             <div className="text-center">
               <img
-                src={imageUrl}
+                src={image}
                 alt="product"
                 className="block mx-auto max-h-[200px]"
               />
             </div>
           )}
           <div className="mb-3">
-            <label className="border bg-black text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-              {photo ? photo.name : "Upload Image"}
+            <label className="border bg-red text-pink-800 px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
               <input
                 type="file"
                 name="image"
                 accept="image/*"
                 onChange={(e) => uploadFileHandler(e.target.files[0])}
-                className={!photo ? "hidden" : "text-black"}
               />
             </label>
           </div>
@@ -212,35 +232,43 @@ const ProductesList = () => {
                     ))}
                 </select>
               </div>
+    
               <div className="two ml-4  justify-between">
                 <label htmlFor="name block"></label>
                 <br />
                 <button
                   className="p-4 mb-3 w-[8rem] border rounded-lg bg-[#101011] text-white"
-                  onClick={clickHandler}
+                  onClick={handleUpdate}
                 >
-                  Submit
+                  Update
                 </button>
-                {addAttributVisible && (
-                  <button
-                    className="pl-5 p-4 mb-3 w-[12rem] border rounded-lg bg-[#101011] text-white"
-                    onClick={attributeHandler}
-                  >
-                    Add attributes
-                  </button>
-                )}
+                <button
+                  className="p-4 mb-3 w-[8rem] border rounded-lg bg-[#101011] text-white"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
               </div>
-              <Modal
-                isOpen={modalVisable}
-                onClose={() => setModalVisable(false)}
-              >
-                <ProductAttributeForm
-                  productID={addedProductId}
-                  typeId={category}
-                  visible={modalVisable}
-                  setVisible={setModalVisable}
-                ></ProductAttributeForm>
-              </Modal>
+                     
+            </div>
+             <div className="mt-5">
+              <h3 className="text-lg font-bold mb-4">Product Attributes</h3>
+              {attributes?.length > 0 ? (
+                <ul className="space-y-2">
+                  {attributes.map((attribute) => (
+                    <li key={attribute.id} className="bg-[#101011] p-4 rounded-lg text-white">
+                      <div className="flex justify-between">
+                        <div>
+                          <p className="font-semibold">{attribute.name}</p>
+                          <p className="text-sm text-gray-400">{attribute.value}</p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No attributes available for this product.</p>
+              )}
             </div>
           </div>
         </div>
@@ -249,4 +277,4 @@ const ProductesList = () => {
   );
 };
 
-export default ProductesList;
+export default UpdateProduct;
