@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.slick-prev:before {
+  color: black !important;
+  font-size: 2rem;
+}
+.slick-next:before {
+  color: black !important;
+  font-size: 2rem;
+}

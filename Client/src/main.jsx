@@ -18,13 +18,17 @@ import ProductTypesList from "./pages/Admin/ProductTypesList.jsx";
 import BrandsList from "./pages/Admin/BrandsList.jsx";
 import AttributesList from "./pages/Admin/AttributesList.jsx";
 import ProductesList from "./pages/Admin/ProductesList.jsx";
-import UpdateProduct from './pages/Admin/UpdateProduct.jsx';
-import AllProducts from "./pages/Admin/Allproducts.jsx";
+import UpdateProduct from "./pages/Admin/UpdateProduct.jsx";
+import AllProducts from "./pages/Admin/AllProducts.jsx";
+import Home from "./Home.jsx";
+import ProductDetails from "./pages/Products/ProductDetails.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/register" element={<Register />}></Route>
+      <Route index={true} path="/" element={<Home />}></Route>
+      <Route path="/product/:id" element ={<ProductDetails/>}></Route>
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<Profile />} />
       </Route>

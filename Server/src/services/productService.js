@@ -36,13 +36,27 @@ async function getAllProducts() {
       resolve(results.rows);
     });
   });
-} 
+}
+async function getTopProducts() {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT p.id, p.name, p.description, p.price, p.photo,p.quantity,p.created_at,b.name as brand,c.name as category,COALESCE(AVG(r.rating), 0) AS average_rating, COALESCE(COUNT(r.rating),0) AS numReviews FROM products as p LEFT JOIN ratings as r ON p.id = r.product_id LEFT JOIN brands as b ON p.brand_id = b.id LEFT JOIN producttype as c ON p.type_id = c.id GROUP BY p.id, p.name, p.description, p.price, p.photo, b.name, c.name ORDER BY average_rating DESC, p.price ASC LIMIT 4",
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results.rows);
+      }
+    );
+  });
+}
 async function getProductById(id) {
   return new Promise((resolve, reject) => {
-    pool.query(`SELECT * FROM products WHERE id=${id}`, (err, results) => {
-      if (err) return reject(err);
-      resolve(results.rows[0]);
-    });
+    pool.query(
+      `SELECT p.id, p.name, p.description, p.price, p.photo,p.quantity,p.created_at,b.name as brand,c.name as category,COALESCE(AVG(r.rating), 0) AS average_rating, COALESCE(COUNT(r.rating),0) AS numReviews FROM products as p LEFT JOIN ratings as r ON p.id = r.product_id LEFT JOIN brands as b ON p.brand_id = b.id LEFT JOIN producttype as c ON p.type_id = c.id WHERE p.id=${id} GROUP BY p.id, p.name, p.description, p.price, p.photo, b.name, c.name`,
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results.rows[0]);
+      }
+    );
   });
 }
 
@@ -122,6 +136,7 @@ async function deleteProduct(id) {
 module.exports = {
   getProducts,
   getProductById,
+  getTopProducts,
   getAllProducts,
   updateProduct,
   createProduct,

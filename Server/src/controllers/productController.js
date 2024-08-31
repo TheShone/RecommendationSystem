@@ -23,6 +23,14 @@ async function fetchAllProducts(req, res) {
     res.status(500).send(err.message);
   }
 }
+async function getTopProducts(req, res) {
+  try {
+    const products = await productService.getTopProducts();
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
 async function getProductById(req, res) {
   try {
     const product = await productService.getProductById(req.params.id);
@@ -102,6 +110,7 @@ async function deleteProduct(req, res) {
 module.exports = {
   getAllProducts,
   getProductById,
+  getTopProducts,
   createProduct,
   updateProduct,
   deleteProduct,

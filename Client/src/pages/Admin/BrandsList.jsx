@@ -90,7 +90,7 @@ const BrandsList = () => {
   return (
     <div className="ml-[10rem] flex flex-col md:flex-row">
       <div className="md:w-3/4 p-3">
-      <AdminMenu/>
+        <AdminMenu />
         <div className="h-12">Manage Brands</div>
         <BrandForm
           value={name}
@@ -100,23 +100,14 @@ const BrandsList = () => {
         />
         <br />
         <hr />
-        <div className="flex wrap">
-          {brands?.map((brand) => (
-            <div key={brand.id}>
-              <button
-                className="bg-black border-black text-white py-2 px-4 rounded-lg m-3 hover:bg-red-500"
-                onClick={() => {
-                  {
-                    setModelVisible(true);
-                    setSelectedBrand(brand);
-                    setUpdatingName(brand.name);
-                  }
-                }}
-              >
-                {brand.name}
-              </button>
-            </div>
-          ))}
+        <div className="mt-6 w-1/2">
+          <div className="grid grid-cols-2 gap-2">
+            {brands?.map((brand) => (
+              <div key={brand.id} className="border rounded-lg p-4 shadow-sm">
+                <h4 className="text-lg font-semibold">{brand.name}</h4>
+              </div>
+            ))}
+          </div>
         </div>
         <Modal isOpen={modalVisible} onClose={() => setModelVisible(false)}>
           <BrandForm

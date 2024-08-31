@@ -232,7 +232,7 @@ const UpdateProduct = () => {
                     ))}
                 </select>
               </div>
-    
+
               <div className="two ml-4  justify-between">
                 <label htmlFor="name block"></label>
                 <br />
@@ -249,26 +249,22 @@ const UpdateProduct = () => {
                   Delete
                 </button>
               </div>
-                     
             </div>
-             <div className="mt-5">
-              <h3 className="text-lg font-bold mb-4">Product Attributes</h3>
-              {attributes?.length > 0 ? (
-                <ul className="space-y-2">
-                  {attributes.map((attribute) => (
-                    <li key={attribute.id} className="bg-[#101011] p-4 rounded-lg text-white">
-                      <div className="flex justify-between">
-                        <div>
-                          <p className="font-semibold">{attribute.name}</p>
-                          <p className="text-sm text-gray-400">{attribute.value}</p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No attributes available for this product.</p>
-              )}
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold mb-4">
+                Product Attributes:
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {attributes?.map((attr) => (
+                  <div
+                    key={attr.id}
+                    className="border rounded-lg p-4 shadow-sm"
+                  >
+                    <h4 className="text-lg font-semibold">{attr.name}</h4>
+                    <p className="text-sm text-gray-600">Value: {attr.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

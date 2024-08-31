@@ -6,6 +6,7 @@ async function getRatings(req, res) {
     if (!ratings) {
       return res.status(404).send("");
     }
+    console.log(ratings);
     res.status(200).json(ratings);
   } catch (err) {
     return res.status(500).send(err);

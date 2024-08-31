@@ -12,9 +12,9 @@ const AllProducts = () => {
   if (isError) {
     return <div>Error</div>;
   }
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
   return (
     <div className="container mx-[9rem]">
       <div className="flex flex-col md:flex-row">

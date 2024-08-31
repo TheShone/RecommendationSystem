@@ -3,7 +3,7 @@ const pool = require("../../db");
 async function getRatings(id) {
   return new Promise((resolve, reject) => {
     pool.query(
-      `SELECT * FROM ratings WHERE product_id=${id}`,
+      `SELECT r.id,r.user_id,r.product_id,r.rating,r.review,u.username FROM ratings as r LEFT JOIN users as u on r.user_id=u.id WHERE r.product_id=${id}`,
       (err, results) => {
         if (err) return reject(err);
         resolve(results.rows);

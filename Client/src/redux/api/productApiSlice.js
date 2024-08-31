@@ -1,5 +1,5 @@
 import React from "react";
-import { PRODUCTES_URL, RECOMMENDATION_URL } from "../constans";
+import { PRODUCTES_URL, RECOMMENDATION_URL, RATINGS_URL } from "../constans";
 import { PRODUCT_ATTRIBUTES_URL } from "../constans";
 import { apiSlice } from "./apiSlice";
 export const productesApiSlice = apiSlice.injectEndpoints({
@@ -20,6 +20,9 @@ export const productesApiSlice = apiSlice.injectEndpoints({
     }),
     allProducts: builder.query({
       query: () => `${PRODUCTES_URL}/all`,
+    }),
+    topProducts: builder.query({
+      query: () => `${PRODUCTES_URL}/top`,
     }),
     getProductDetails: builder.query({
       query: (productId) => ({
@@ -61,11 +64,24 @@ export const productesApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCT_ATTRIBUTES_URL}/${id}`,
       }),
     }),
+    createReview: builder.mutation({
+      query: (data) => ({
+        url: `${RATINGS_URL}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getReviews: builder.query({
+      query: (id) => ({
+        url: `${RATINGS_URL}/${id}`,
+      }),
+    }),
   }),
 });
 export const {
   useGetProductByIdQuery,
   useGetProductsQuery,
+  useTopProductsQuery,
   useAllProductsQuery,
   useGetProductDetailsQuery,
   useCreateProductMutation,
@@ -73,4 +89,6 @@ export const {
   useDeleteProductMutation,
   useCreateProductAttributeMutation,
   useGetProductAttributesQuery,
+  useCreateReviewMutation,
+  useGetReviewsQuery,
 } = productesApiSlice;
