@@ -31,6 +31,15 @@ async function getTopProducts(req, res) {
     res.status(500).send(err.message);
   }
 }
+async function getFilteredProducts(req, res) {
+  try {
+    const { checked, radio } = req.body;
+    const products = await productService.getFilteredProducts(checked, radio);
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
 async function getProductById(req, res) {
   try {
     const product = await productService.getProductById(req.params.id);
@@ -111,6 +120,7 @@ module.exports = {
   getAllProducts,
   getProductById,
   getTopProducts,
+  getFilteredProducts,
   createProduct,
   updateProduct,
   deleteProduct,

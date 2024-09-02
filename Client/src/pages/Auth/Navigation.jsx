@@ -37,6 +37,9 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+  console.log(cartItems);
   const logOut = async () => {
     try {
       console.log("KURCINA");
@@ -73,14 +76,20 @@ const Navigation = () => {
               <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
             </Link>
           ))}
-        
-          <Link
-            to="/cart"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
-          </Link>
+        <div className="absolute mt-[6rem]">
+          {cartItems?.length > 0 && (
+            <span className="px-1 py-0 text-sm text-white bg-red-500 rounded-full absolute mt-[1.5rem] mr-[2rem]">
+              {cartItems.reduce((acc, product) => acc + product.qty, 0)}
+            </span>
+          )}
+        </div>
+        <Link
+          to="/cart"
+          className="flex items-center transition-transform transform hover:translate-x-2"
+        >
+          <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
+          <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
+        </Link>
         
         {userInfo && (
           <Link

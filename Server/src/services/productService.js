@@ -48,6 +48,49 @@ async function getTopProducts() {
     );
   });
 }
+async function getFilteredProducts(checked, radio) {
+  return new Promise((resolve, reject) => {
+    let query = `
+      SELECT p.id, p.name, p.description, p.price, p.photo, p.quantity, p.created_at, 
+             b.name AS brand, c.name AS category, 
+             COALESCE(AVG(r.rating), 0) AS average_rating, 
+             COALESCE(COUNT(r.rating), 0) AS numReviews 
+      FROM products AS p 
+      LEFT JOIN ratings AS r ON p.id = r.product_id 
+      LEFT JOIN brands AS b ON p.brand_id = b.id 
+      LEFT JOIN producttype AS c ON p.type_id = c.id 
+    `;
+
+    const values = [];
+    const conditions = [];
+
+    if (checked && checked.length > 0) {
+      conditions.push(`c.id = ANY($${values.length + 1})`);
+      values.push(checked);
+    }
+
+    if (radio && radio.length === 2) {
+      conditions.push(
+        `p.price BETWEEN $${values.length + 1} AND $${values.length + 2}`
+      );
+      values.push(radio[0], radio[1]);
+    }
+
+    if (conditions.length > 0) {
+      query += `WHERE ${conditions.join(" AND ")} `;
+    }
+
+    query += `
+      GROUP BY p.id, b.name, c.name 
+      ORDER BY average_rating DESC, p.price ASC
+    `;
+
+    pool.query(query, values, (err, results) => {
+      if (err) return reject(err);
+      resolve(results.rows);
+    });
+  });
+}
 async function getProductById(id) {
   return new Promise((resolve, reject) => {
     pool.query(
@@ -137,6 +180,7 @@ module.exports = {
   getProducts,
   getProductById,
   getTopProducts,
+  getFilteredProducts,
   getAllProducts,
   updateProduct,
   createProduct,

@@ -6,7 +6,8 @@ const {
   updateProduct,
   deleteProduct,
   fetchAllProducts,
-  getTopProducts
+  getTopProducts,
+  getFilteredProducts,
 } = require("../controllers/productController");
 const router = express.Router();
 const {
@@ -17,6 +18,7 @@ const {
 router.get("/", getAllProducts);
 router.get("/all", fetchAllProducts);
 router.get("/top", getTopProducts);
+router.post("/filtered", getFilteredProducts);
 router.get("/:id", getProductById);
 router.post("/", authenticate, authorizedAdmin, createProduct);
 router.put("/:id", authenticate, authorizedAdmin, updateProduct);

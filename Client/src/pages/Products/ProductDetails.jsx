@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useGetProductDetailsQuery,
   useGetProductAttributesQuery,
@@ -25,13 +25,14 @@ import moment from "moment";
 import Ratings from "./Ratings";
 import ProductTabs from "./ProductTabs";
 import { IoMdArrowBack } from "react-icons/io";
-
+import { addToCart } from "../../redux/features/cart/cartSlice";
 const ProductDetails = () => {
   const { id: productId } = useParams();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const dispatch = useDispatch();
   const {
     data: product,
     isLoading,
@@ -47,7 +48,10 @@ const ProductDetails = () => {
     isLoading: reviewsLoading,
     error: reviewsError,
   } = useGetReviewsQuery(productId);
-  const addToChartHandler = async () => {};
+  const addToChartHandler = async () => {
+    dispatch(addToCart({ ...product, qty }));
+    toast.success("Product added to cart");
+  };
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -71,8 +75,7 @@ const ProductDetails = () => {
           to="/"
           className="text-black font-semibold hover:underline flex items-center ml-[10rem]"
         >
-          <IoMdArrowBack className="text-black mr-2 size-8" /> 
-          
+          <IoMdArrowBack className="text-black mr-2 size-8" />
         </Link>
       </div>
       {isLoading ? (
