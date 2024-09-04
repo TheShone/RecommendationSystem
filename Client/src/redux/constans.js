@@ -7,3 +7,5 @@ export const PRODUCTES_URL = "/products";
 export const RECOMMENDATION_URL = "/recommendation";
 export const RATINGS_URL = "/ratings";
 export const PRODUCT_ATTRIBUTES_URL = "/productAttributes"
+export const ORDERS_URL = './orders'
+export const PURCHASEHISTORY ='./purchasehistory'

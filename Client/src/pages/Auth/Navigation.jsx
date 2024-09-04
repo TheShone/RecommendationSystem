@@ -20,6 +20,8 @@ import { TbBrandBooking } from "react-icons/tb";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoMdAddCircle } from "react-icons/io";
 import { FaProductHunt } from "react-icons/fa";
+import { IoBag } from "react-icons/io5";
+
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -90,7 +92,26 @@ const Navigation = () => {
           <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
         </Link>
-        
+        {userInfo && userInfo.role != "admin" && (
+          <Link
+            to="/userorders"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <IoBag className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              My Orders
+            </span>{" "}
+          </Link>
+        )}
+        {userInfo && userInfo.role == "admin" && (
+          <Link
+            to="/admin/orders"
+            className="flex items-center transition-transform transform hover:translate-x-2"
+          >
+            <IoBag className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">Orders</span>{" "}
+          </Link>
+        )}
         {userInfo && (
           <Link
             to="/profile"

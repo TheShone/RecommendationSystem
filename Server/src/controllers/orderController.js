@@ -8,6 +8,14 @@ async function getOrdersByUser(req, res) {
     res.status(500).send(err.message);
   }
 }
+async function getOrderById(req, res) {
+  try {
+    const order = await orderService.getOrderById(req.params.id);
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
 async function getOrders(req, res) {
   try {
     const orders = await orderService.getOrders();
@@ -57,6 +65,7 @@ async function deleteOrder(req, res) {
 
 module.exports = {
   getOrdersByUser,
+  getOrderById,
   getOrders,
   createOrder,
   updateOrderStatus,

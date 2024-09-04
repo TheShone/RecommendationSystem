@@ -12,6 +12,14 @@ async function getOrdersByUserId(user_id) {
     );
   });
 }
+async function getOrderById(id) {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM orders WHERE id = $1", [id], (err, results) => {
+      if (err) return reject(err);
+      resolve(results.rows);
+    });
+  });
+}
 async function getOrders() {
   return new Promise((resolve, reject) => {
     pool.query("SELECT * FROM orders", (err, results) => {
@@ -68,9 +76,11 @@ async function deleteOrder(id) {
   });
 }
 
+
 module.exports = {
   getOrdersByUserId,
   getOrders,
+  getOrderById,
   createOrder,
   updateOrderStatus,
   deleteOrder,

@@ -24,6 +24,11 @@ import Home from "./pages/Home.jsx";
 import ProductDetails from "./pages/Products/ProductDetails.jsx";
 import Cart from "./pages/Cart.jsx";
 import Shop from "./pages/Shop.jsx";
+import Shipping from "./pages/Orders/Shipping.jsx";
+import PlaceOrder from "./pages/Orders/PlaceOrder.jsx";
+import UserOrders from "./pages/User/UserOrders.jsx";
+import Order from "./pages/Orders/Order.jsx";
+import AdminOrders from "./pages/Admin/AdminOrders.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -33,8 +38,12 @@ const router = createBrowserRouter(
       <Route path="/product/:id" element={<ProductDetails />}></Route>
       <Route path="/cart" element={<Cart />} />
       <Route path="/shop" element={<Shop />} />
+      <Route path="/userorders" element={<UserOrders />} />
+      <Route path="/order/:id" element={<Order />} />
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/placeorder" element={<PlaceOrder />} />
       </Route>
       <Route path="/admin" element={<AdminRoute />}>
         <Route path="userList" element={<UserList />} />
@@ -44,6 +53,7 @@ const router = createBrowserRouter(
         <Route path="productesList" element={<ProductesList />} />
         <Route path="product/update/:id" element={<UpdateProduct />} />
         <Route path="allproductslist" element={<AllProducts />} />
+        <Route path='orders' element={<AdminOrders/>}/>
       </Route>
     </Route>
   )
