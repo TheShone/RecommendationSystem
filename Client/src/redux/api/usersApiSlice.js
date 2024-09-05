@@ -49,6 +49,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    createPreferences: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `${USERS_URL}/preferences/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -60,4 +67,5 @@ export const {
   useGetProfileQuery,
   useGetUsersQuery,
   useDeleteUserMutation,
+  useCreatePreferencesMutation,
 } = userApiSlice;

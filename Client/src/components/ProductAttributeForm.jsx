@@ -10,7 +10,6 @@ export const ProductAttributeForm = ({
   setVisible,
 }) => {
   const [value, setValue] = useState("");
-  console.log("TIP" + typeId);
   const { data: attributes, isLoading } = useGetAttributesPerTypeQuery({
     id: typeId,
   });

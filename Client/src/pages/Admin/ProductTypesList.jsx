@@ -50,7 +50,6 @@ const ProductTypesList = () => {
       return;
     }
     try {
-      console.log(selectedProductType.id + " " + updatingName);
       const result = await updateProductType({
         id: selectedProductType.id,
         data: { name: updatingName },

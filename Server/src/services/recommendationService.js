@@ -18,7 +18,6 @@ async function getRecommendations(userId) {
       console.log("PREOGROMNA PATKA");
       return recommendedProducts;
     } else return await recommendForNewUser(userId, conn);
-    
   } else {
     return await recommendForNewUser(userId, conn);
   }
@@ -48,19 +47,24 @@ async function recommendBasedOnHistory(userId, conn) {
   return new Promise(async (resolve, reject) => {
     try {
       const similarUsers = await findSimilarUsers(userId, conn);
-      console.log(similarUsers);
 
       let userPurchasedProducts = [];
       await conn.all(
         `
         SELECT product_id 
         FROM db.public.purchasehistory
-        WHERE user_id = ${userId}
+        WHERE user_id = $1
       `,
+        [userId],
         (err, result) => {
           if (err) return reject(err);
           userPurchasedProducts = result.map((row) => row.product_id);
 
+          if (similarUsers.length === 0) {
+            return resolve([]);
+          }
+          const users = similarUsers.join(",");
+          const purchases = userPurchasedProducts.join(",");
           conn.all(
             `
             SELECT DISTINCT p.id, p.name, p.description, p.price, p.photo,
@@ -68,21 +72,16 @@ async function recommendBasedOnHistory(userId, conn) {
             FROM db.public.purchasehistory ph
             JOIN db.public.products p ON ph.product_id = p.id
             LEFT JOIN db.public.ratings r ON p.id = r.product_id
-            WHERE ph.user_id IN (${
-              similarUsers.length ? similarUsers.join(",") : "-1"
-            })
-              AND p.id NOT IN (${
-                userPurchasedProducts.length
-                  ? userPurchasedProducts.join(",")
-                  : "-1"
-              })
+            WHERE ph.user_id IN (${users})
+              AND p.id NOT IN (${purchases})
             GROUP BY p.id, p.name, p.description, p.price, p.photo
             ORDER BY average_rating DESC, p.price ASC
             LIMIT 10
           `,
             async (err, recommendedProducts) => {
-              if (err) return reject(err);
-
+              if (err) {
+                return reject(err);
+              }
               if (recommendedProducts.length < 10) {
                 let similarProducts = [];
 
@@ -144,7 +143,6 @@ async function recommendBasedOnHistory(userId, conn) {
 
 async function recommendForNewUser(userId, conn) {
   return new Promise((resolve, reject) => {
-    console.log("recomNewUsers");
     conn.all(
       `
         SELECT type_id, brand_id 
@@ -162,7 +160,6 @@ async function recommendForNewUser(userId, conn) {
           return resolve([]);
         }
         const { type_id, brand_id } = userPreferences[0];
-        console.log(type_id + " " + brand_id);
         conn.all(
           `
             SELECT p.id, p.name, p.description, p.price, p.photo,
@@ -189,7 +186,6 @@ async function recommendForNewUser(userId, conn) {
 }
 async function findSimilarUsers(userId, conn) {
   try {
-    console.log("Krenuo");
     const similarUsersByPurchasePromise = new Promise((resolve, reject) => {
       conn.all(
         `
@@ -239,7 +235,6 @@ async function findSimilarUsers(userId, conn) {
       ...similarUserIdsByAttributes,
     ]);
 
-    console.log("final " + Array.from(allSimilarUserIds));
     return Array.from(allSimilarUserIds);
   } catch (error) {
     console.error("Greška prilikom pronalaženja sličnih korisnika: ", error);

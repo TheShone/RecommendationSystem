@@ -4,10 +4,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import "react-datepicker/dist/react-datepicker.css";
-import { useRegisterMutation } from "../../redux/api/usersApiSlice";
+import {
+  useRegisterMutation,
+  useCreatePreferencesMutation,
+} from "../../redux/api/usersApiSlice";
 import DatePicker from "react-datepicker";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useGetProductTypesQuery } from "../../redux/api/productTypesApiSlice";
+import { useGetBrandsQuery } from "../../redux/api/brandsApiSlice";
 import { v4 } from "uuid";
 import { storage } from "../../firabse";
 const Register = () => {
@@ -20,6 +25,8 @@ const Register = () => {
   const [dateBirth, setDateBirth] = useState("");
   const [address, setAddress] = useState("");
   const [photo, setPhoto] = useState("");
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/login";
@@ -27,51 +34,66 @@ const Register = () => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
   const [register, { isLoading }] = useRegisterMutation();
+  const [createPreferences] = useCreatePreferencesMutation();
+  const { data: categories } = useGetProductTypesQuery();
+  const { data: brands } = useGetBrandsQuery();
   useEffect(() => {
     if (userInfo) navigate(redirect);
   }, [navigate, redirect, userInfo]);
   const registUser = async (e) => {
     e.preventDefault();
-    if (password != confirmPassword) toast.error("Passwords do not match");
-    else {
-      try {
-        const imageRef = ref(storage, `users/${photo.name + v4()}`);
-        uploadBytes(imageRef, photo).then(() => {
-          getDownloadURL(imageRef).then(async (res) => {
-            try {
-              console.log({
-                name,
-                surname,
-                username,
-                email,
-                password,
-                dateBirth,
-                address,
-                res,
-              });
-              const addedUser = await register({
-                name,
-                surname,
-                username,
-                email,
-                password,
-                dateBirth,
-                address,
-                photo: res,
-              }).unwrap();
-              console.log("kraj");
-              toast.success(addedUser);
-              navigate(redirect);
-            } catch (error) {
-              toast.error(error.data);
-              console.log("Error:", error);
-            }
+    if (
+      name &&
+      surname &&
+      username &&
+      email &&
+      password &&
+      confirmPassword &&
+      dateBirth &&
+      photo &&
+      brand &&
+      category
+    ) {
+      if (password != confirmPassword) toast.error("Passwords do not match");
+      else {
+        try {
+          const imageRef = ref(storage, `users/${photo.name + v4()}`);
+          uploadBytes(imageRef, photo).then(() => {
+            getDownloadURL(imageRef).then(async (res) => {
+              try {
+                const addedUser = await register({
+                  name,
+                  surname,
+                  username,
+                  email,
+                  password,
+                  dateBirth,
+                  address,
+                  photo: res,
+                }).unwrap();
+                if (addedUser.id != undefined) {
+                  const idd = addedUser.id;
+                  const userwithPreferences = await createPreferences({
+                    id: idd,
+                    type_id: category,
+                    brand_id: brand,
+                  }).unwrap();
+                  toast.success("Added user " + addedUser.id + " successfully");
+                  navigate(redirect);
+                } else {
+                  toast.error("Registration failed: User data is undefined.");
+                }
+              } catch (error) {
+                toast.error(error.data);
+                console.log("Error:", error);
+              }
+            });
           });
-        });
-      } catch (error) {
-        toast.error(error.data);
+        } catch (error) {
+          toast.error(error.data);
+        }
       }
-    }
+    } else toast.error("All fields are required");
   };
   return (
     <section className="pl-[45rem] flex flex-wrap">
@@ -86,7 +108,7 @@ const Register = () => {
             <input
               type="text"
               id="name"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -99,7 +121,7 @@ const Register = () => {
             <input
               type="text"
               id="name"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Enter name"
               value={surname}
               onChange={(e) => setSurname(e.target.value)}
@@ -112,7 +134,7 @@ const Register = () => {
             <input
               type="text"
               id="name"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Enter name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -125,7 +147,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -139,7 +161,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -156,7 +178,7 @@ const Register = () => {
             <input
               type="password"
               id="confirmPassword"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -179,7 +201,7 @@ const Register = () => {
             <input
               type="text"
               id="confirmPassword"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -192,16 +214,52 @@ const Register = () => {
             <input
               type="file"
               id="photo"
-              className="mt-1 p-2 border rounded w-full"
+              className="mt-1 p-2 border rounded w-full shadow-sm"
               placeholder="Address"
               onChange={(e) => setPhoto(e.target.files[0])}
             />
           </div>
-
+          <div className="my-[2rem] justify-between">
+            <label className="block text-sm font-medium ">Preferences</label>
+            <select
+              className="p-4 mb-3 w-[15rem] border rounded-lg text-black shadow-sm"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              disabled={isLoading || !brands}
+            >
+              <option value="" disabled>
+                {isLoading ? "Loading brands..." : "Select Brand"}
+              </option>
+              {!isLoading &&
+                brands?.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+            </select>
+            <select
+              className="p-4 mb-3 w-[15rem] border rounded-lg shadow-sm text-black"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              disabled={isLoading || !categories}
+            >
+              <option value="" disabled>
+                {isLoading ? "Loading categories..." : "Select categorie"}
+              </option>
+              {!isLoading &&
+                categories?.map((categorie) => (
+                  <option key={categorie.id} value={categorie.id}>
+                    {categorie.name}
+                  </option>
+                ))}
+            </select>
+          </div>
           <button
             type="submit"
-            className="bg-black text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
-          >Register</button>
+            className="bg-green-500 text-white py-2 px-4 rounded-full text-lg"
+          >
+            Register
+          </button>
         </form>
 
         <div className="mt-4">

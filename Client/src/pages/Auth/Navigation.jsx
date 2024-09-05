@@ -21,6 +21,8 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { IoMdAddCircle } from "react-icons/io";
 import { FaProductHunt } from "react-icons/fa";
 import { IoBag } from "react-icons/io5";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { clearCarItems } from "../../redux/features/cart/cartSlice";
 
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -41,12 +43,11 @@ const Navigation = () => {
   const [logoutApiCall] = useLogoutMutation();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  console.log(cartItems);
   const logOut = async () => {
     try {
-      console.log("KURCINA");
       await logoutApiCall().unwrap();
       dispatch(logout());
+      dispatch(clearCarItems());
       navigate("/login");
     } catch (err) {
       console.error(error);
@@ -66,21 +67,20 @@ const Navigation = () => {
           className="flex items-center transition-transform transform hover:translate-x-1"
         >
           <AiOutlineHome className="mr-2 mt-[2rem]" size={26} />
-          <span className="hidden nav-item-name mt-[2rem]">HOME</span>{" "}
+          <span className="hidden nav-item-name mt-[2rem]">Home</span>{" "}
         </Link>
-        {!userInfo ||
-          (userInfo.role == "user" && (
-            <Link
-              to="/shop"
-              className="flex items-center transition-transform transform hover:translate-x-2"
-            >
-              <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
-              <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
-            </Link>
-          ))}
-        <div className="absolute mt-[6rem]">
+
+        <Link
+          to="/shop"
+          className="flex items-center transition-transform transform hover:translate-x-2"
+        >
+          <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
+          <span className="hidden nav-item-name mt-[3rem]">Shop</span>{" "}
+        </Link>
+
+        <div className="">
           {cartItems?.length > 0 && (
-            <span className="px-1 py-0 text-sm text-white bg-red-500 rounded-full absolute mt-[1.5rem] mr-[2rem]">
+            <span className="px-1 py-0 text-sm text-white bg-red-500 rounded-full mr-[2rem] absolute mt-[2.5rem]">
               {cartItems.reduce((acc, product) => acc + product.qty, 0)}
             </span>
           )}
@@ -90,7 +90,7 @@ const Navigation = () => {
           className="flex items-center transition-transform transform hover:translate-x-2"
         >
           <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">CART</span>{" "}
+          <span className="hidden nav-item-name mt-[3rem]">Cart</span>{" "}
         </Link>
         {userInfo && userInfo.role != "admin" && (
           <Link
@@ -105,11 +105,13 @@ const Navigation = () => {
         )}
         {userInfo && userInfo.role == "admin" && (
           <Link
-            to="/admin/orders"
+            to="/admin/allproductslist"
             className="flex items-center transition-transform transform hover:translate-x-2"
           >
-            <IoBag className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Orders</span>{" "}
+            <MdAdminPanelSettings className="mr-2 mt-[3rem]" size={26} />
+            <span className="hidden nav-item-name mt-[3rem]">
+              Admin panel
+            </span>{" "}
           </Link>
         )}
         {userInfo && (
@@ -123,57 +125,6 @@ const Navigation = () => {
             </span>{" "}
           </Link>
         )}
-        {userInfo && userInfo.role == "admin" && (
-          <Link
-            to="/admin/userList"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <PiUserListDuotone className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Users</span>{" "}
-          </Link>
-        )}
-        {userInfo && userInfo.role == "admin" && (
-          <Link
-            to="/admin/brandsList"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <TbBrandBooking className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Brands</span>{" "}
-          </Link>
-        )}
-        {userInfo && userInfo.role == "admin" && (
-          <Link
-            to="/admin/producttypeslist"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <BiCategoryAlt className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">
-              Categories
-            </span>{" "}
-          </Link>
-        )}
-        {userInfo && userInfo.role == "admin" && (
-          <Link
-            to="/admin/attributesList"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <IoMdAddCircle className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">
-              Attributes
-            </span>{" "}
-          </Link>
-        )}
-        {userInfo && userInfo.role == "admin" && (
-          <Link
-            to="/admin/productesList"
-            className="flex items-center transition-transform transform hover:translate-x-2"
-          >
-            <FaProductHunt className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">
-              Productes
-            </span>{" "}
-          </Link>
-        )}
       </div>
       {!userInfo && (
         <ul>
@@ -183,7 +134,7 @@ const Navigation = () => {
               className="flex items-center transition-transform transform hover:translate-x-2"
             >
               <AiOutlineLogin className="mr-2 mt-[3rem]" size={26} />
-              <span className="hidden nav-item-name mt-[3rem]">LOGIN</span>{" "}
+              <span className="hidden nav-item-name mt-[3rem]">Login</span>{" "}
             </Link>
           </li>
           <li>
@@ -193,7 +144,7 @@ const Navigation = () => {
             >
               <AiOutlineUserAdd className="mr-2 mt-[3rem]" size={26} />
               <span className="hidden nav-item-name mt-[3rem]">
-                REGISTER
+                Register
               </span>{" "}
             </Link>
           </li>
@@ -203,7 +154,7 @@ const Navigation = () => {
         <Link className="flex items-center transition-transform transform hover:translate-x-2">
           <CiLogout className="mr-2 " size={26} onClick={logOut} />
           <span className="hidden nav-item-name " onClick={logOut}>
-            LOGOUT
+            Logout
           </span>{" "}
         </Link>
       )}

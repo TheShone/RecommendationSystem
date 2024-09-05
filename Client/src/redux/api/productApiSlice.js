@@ -83,6 +83,11 @@ export const productesApiSlice = apiSlice.injectEndpoints({
         url: `${RATINGS_URL}/${id}`,
       }),
     }),
+    getRecommendations: builder.query({
+      query: (id) => ({
+        url: `${RECOMMENDATION_URL}/${id}`,
+      }),
+    }),
   }),
 });
 export const {
@@ -99,4 +104,5 @@ export const {
   useGetProductAttributesQuery,
   useCreateReviewMutation,
   useGetReviewsQuery,
+  useGetRecommendationsQuery,
 } = productesApiSlice;

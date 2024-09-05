@@ -1,4 +1,4 @@
-const userService = require("c:/Fax/Cetvrta godina/Diplomski/RecommendationSystem/server/src/services/userService.js");
+const userService = require("c:/Fax/Cetvrta godina/Diplomski/RecommendationSystem/Server/src/services/userService.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -123,6 +123,19 @@ async function updateUser(req, res) {
     res.status(500).send(err.message);
   }
 }
+async function createPrefereces(req, res) {
+  try {
+    const { type_id, brand_id } = req.body;
+    const userWithPreferences = await userService.createPrefereces(
+      req.params.id,
+      type_id,
+      brand_id
+    );
+    res.json(userWithPreferences);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
 async function deleteUser(req, res) {
   try {
     await userService.deleteUser(req.params.id);
@@ -150,4 +163,5 @@ module.exports = {
   loginUser,
   authenticateToken,
   logoutUser,
+  createPrefereces,
 };

@@ -38,7 +38,6 @@ const Profile = () => {
   } = useGetProfileQuery(userInfo.id);
   useEffect(() => {
     if (profile) {
-      console.log(profile);
       setUsername(profile.username);
       setEmail(profile.email);
       setName(profile.name);
@@ -59,16 +58,6 @@ const Profile = () => {
         uploadBytes(imageRef, newPhoto).then(() => {
           getDownloadURL(imageRef).then(async (res) => {
             try {
-              console.log({
-                name,
-                surname,
-                username,
-                email,
-                password,
-                dateBirth,
-                address,
-                photo: res,
-              });
               const updated = await updateProfile({
                 id: userInfo.id,
                 name,
@@ -89,7 +78,6 @@ const Profile = () => {
                   role: updated.role,
                 })
               );
-              console.log("kao");
               refetch();
             } catch (error) {
               toast.error(error.data);
@@ -107,13 +95,13 @@ const Profile = () => {
     <section className="pl-[30rem] flex flex-wrap">
       <div className="mt-[2rem] items-center">
         <form onSubmit={updateUser} className="container w-[60rem]">
-          <div className="my-[1rem]">
+          <div className="my-[1rem] w-[300px] h-[300px]">
             <Image
               src={photo}
               indicatorIcon={icon}
               alt="Image"
               preview
-              className="w-[250px] h-[250px] object-cover"
+              className="object-cover"
             />
           </div>
           <div className="my-[1rem]">

@@ -117,17 +117,6 @@ async function updateUser(
   photo
 ) {
   return new Promise(async (resolve, reject) => {
-    console.log({
-      id,
-      name,
-      surname,
-      username,
-      email,
-      password,
-      dateBirth,
-      address,
-      photo,
-    });
     const hashedPassword = await bcrypt.hash(password, 10);
     pool.query(
       "UPDATE users SET name = $1,surname= $2,username=$3,email=$4,password=$5,dateBirth=$6,address=$7,photo=$8 WHERE id = $9 RETURNING *",
@@ -149,7 +138,18 @@ async function updateUser(
     );
   });
 }
-
+async function createPrefereces(id, type_id, brand_id) {
+  return new Promise(async (resolve, reject) => {
+    pool.query(
+      "UPDATE users SET type_id = $1,brand_id= $2 WHERE id = $3 RETURNING *",
+      [type_id, brand_id, id],
+      (err, result) => {
+        if (err) throw reject(err);
+        return resolve(result.rows[0]);
+      }
+    );
+  });
+}
 async function deleteUser(id) {
   return new Promise((resolve, reject) => {
     pool.query("DELETE FROM users WHERE id = $1", [id], (err, result) => {
@@ -166,4 +166,5 @@ module.exports = {
   createUser,
   deleteUser,
   getUserByEmail,
+  createPrefereces,
 };

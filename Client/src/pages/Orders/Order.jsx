@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Messsage from "../../components/Message";
 import Loader from "../../components/Loader";
+
 import {
   useGetOrderQuery,
   useUpdateOrderMutation,
@@ -13,22 +14,18 @@ const Order = () => {
   const { id: orderId } = useParams();
   const { data: order, refetch, isLoading, error } = useGetOrderQuery(orderId);
   const { userInfo } = useSelector((state) => state.auth);
+  const [status, setStatus] = useState(false);
   const [updateOrder, { isLoading: loadingUpdateProfile }] =
     useUpdateOrderMutation();
   const [createPurchase, { isLoading: loadingPurchase }] =
     useCreatePurchaseMutation();
-
-  console.log(order);
-  function onError(err) {
-    toast.error(err.message);
-  }
+  const navigate = useNavigate();
   const statusHandler = async () => {
     try {
       const res = await updateOrder({
         id: order[0].id,
         status: true,
       }).unwrap();
-      console.log(res);
       toast.success("Order updated successfuly");
       order[0].products.forEach((product) => {
         createPurchase({

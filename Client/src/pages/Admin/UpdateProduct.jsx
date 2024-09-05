@@ -48,7 +48,6 @@ const UpdateProduct = () => {
           "Are you sure that you want to delete this product?"
         );
         if (!answer) return;
-        console.log(updatedProductId);
         const result = await deleteProduct(productData.id).unwrap();
         toast.success(result);
         navigate("/admin/allproductslist");
@@ -64,7 +63,6 @@ const UpdateProduct = () => {
     uploadBytes(imageRef, path).then(() => {
       getDownloadURL(imageRef).then(async (res) => {
         setImage(res);
-        console.log("nakon uloada" + image);
       });
     });
   };
@@ -82,7 +80,6 @@ const UpdateProduct = () => {
       return;
     } else {
       try {
-        console.log("U update" + image);
         const result = await updateProduct({
           productId: updatedProductId,
           formData: {
@@ -110,7 +107,6 @@ const UpdateProduct = () => {
     }
   };
   useEffect(() => {
-    console.log(productData);
     if (productData && productData.id) {
       setUpdatedProductId(productData.id);
       setName(productData.name);

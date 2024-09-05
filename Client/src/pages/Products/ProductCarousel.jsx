@@ -15,7 +15,6 @@ import {
 import { BiCategory } from "react-icons/bi";
 const ProductCarousel = () => {
   const { data: products, isLoading, error } = useTopProductsQuery();
-  console.log(products);
   const CustomArrow = ({ className, style, onClick }) => (
     <div
       className={className}

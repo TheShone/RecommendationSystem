@@ -11,7 +11,6 @@ const UserOrders = () => {
     isLoading,
     error,
   } = useGetMyOrdersQuery(userInfo?.id);
-  console.log(orders);
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl font-sembold mb-4 ml-20">My Orders</h2>

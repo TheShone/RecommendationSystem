@@ -53,16 +53,6 @@ const ProductesList = () => {
       return;
     } else {
       try {
-        console.log({
-          name,
-          description,
-          price,
-          brand_id: brand,
-          type_id: category,
-          created_at: new Date(),
-          photo: imageUrl,
-          quantity,
-        });
         const result = await createProduct({
           name,
           description,

@@ -50,7 +50,6 @@ const BrandsList = () => {
       return;
     }
     try {
-      console.log(selectedBrand.id + " " + updatingName);
       const result = await updateBrand({
         id: selectedBrand.id,
         data: { name: updatingName },

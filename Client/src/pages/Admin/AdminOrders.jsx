@@ -4,6 +4,7 @@ import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { useGetOrdersQuery } from "../../redux/api/orderSlice";
 import { useSelector } from "react-redux";
+import AdminMenu from '../Admin/AdminMenu'
 const AdminOrders = () => {
   const {
     data: orders,
@@ -12,6 +13,7 @@ const AdminOrders = () => {
   } = useGetOrdersQuery();
   return (
     <div className="container mx-auto">
+      <AdminMenu/>
       <h2 className="text-2xl font-sembold mb-4 ml-20">Orders</h2>
       {isLoading ? (
         <Loader />

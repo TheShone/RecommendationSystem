@@ -14,7 +14,6 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import { UserContext } from "../../UserContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +31,6 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-      console.log(res);
       dispatch(setCredientials({ ...res }));
     } catch (error) {
       toast.error(error?.data?.message || error.message);

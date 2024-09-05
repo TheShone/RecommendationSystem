@@ -16,7 +16,6 @@ const ProductTabs = ({
   reviews,
 }) => {
   const [activeTab, setActiveTab] = useState(1);
-  console.log(reviews);
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
   };

@@ -53,7 +53,6 @@ const BrandsList = () => {
       return;
     }
     try {
-      console.log("ID JE " + updatingId);
       const result = await updateAttribute({
         id: selectedAttribute.id,
         data: { name: updatingName, type_id: updatingId },
@@ -117,7 +116,6 @@ const BrandsList = () => {
                     setSelectedAttribute(attribute);
                     setUpdatingName(attribute.attributename);
                     setUpdatingId(attribute.type_id);
-                    console.log("KURCINAAAAA" + attribute.type_id);
                   }
                 }}
               >
