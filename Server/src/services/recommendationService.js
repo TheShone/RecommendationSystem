@@ -15,7 +15,6 @@ async function getRecommendations(userId) {
   if (hasUserPurchaseHistory) {
     const recommendedProducts = await recommendBasedOnHistory(userId, conn);
     if (recommendedProducts && recommendedProducts.length > 0) {
-      console.log("PREOGROMNA PATKA");
       return recommendedProducts;
     } else return await recommendForNewUser(userId, conn);
   } else {
