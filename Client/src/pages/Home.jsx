@@ -7,16 +7,15 @@ import Loader from "../components/Loader";
 import Product from "./Products/Product";
 import { useSelector } from "react-redux";
 const Home = () => {
-  const { keyword } = useParams();
   const { userInfo } = useSelector((state) => state.auth);
-  const id = userInfo?.id
-  const { data, isLoading, isError } = useGetRecommendationsQuery(
-    id,
-  );
+  const id = userInfo?.id;
+  console.log(id);
+  const { data, isLoading, isError } = useGetRecommendationsQuery(id);
   return (
-    userInfo && data &&(
+    <>
+      <Header /> 
+      {userInfo && data && (
       <>
-        {!keyword ? <Header /> : null}
         {isLoading ? (
           <Loader />
         ) : (
@@ -44,7 +43,8 @@ const Home = () => {
           </>
         )}
       </>
-    )
+      )}
+    </>
   );
 };
 

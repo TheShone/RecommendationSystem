@@ -25,7 +25,9 @@ const Login = () => {
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
   useEffect(() => {
-    if (userInfo) navigate(redirect);
+    if (userInfo && userInfo.role == "user") navigate(redirect);
+    else if (userInfo && userInfo.role == "admin")
+      navigate("/admin/allproductslist");
   }, [redirect, userInfo, navigate]);
   const loginUser = async (e) => {
     e.preventDefault();

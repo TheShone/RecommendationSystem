@@ -64,30 +64,10 @@ async function logoutUser(req, res) {
 
 async function createUser(req, res) {
   try {
-    const {
-      name,
-      surname,
-      username,
-      email,
-      password,
-      dateBirth,
-      address,
-      photo,
-      type_id,
-      brand_id,
+    const {name,surname,username,email,password,dateBirth,address,photo,type_id,brand_id,
     } = req.body;
-    const response = await userService.createUser(
-      name,
-      surname,
-      username,
-      email,
-      password,
-      dateBirth,
-      address,
-      photo,
-      "user",
-      type_id,
-      brand_id
+    const response = await userService.createUser(name,surname,username,email,password,
+      dateBirth,address,photo,"user",type_id,brand_id
     );
     res.status(201).json(response);
   } catch (err) {

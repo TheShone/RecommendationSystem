@@ -42,17 +42,8 @@ const Register = () => {
   }, [navigate, redirect, userInfo]);
   const registUser = async (e) => {
     e.preventDefault();
-    if (
-      name &&
-      surname &&
-      username &&
-      email &&
-      password &&
-      confirmPassword &&
-      dateBirth &&
-      photo &&
-      brand &&
-      category
+    if (name && surname && username && email && password && confirmPassword && dateBirth && 
+      photo && brand && category
     ) {
       if (password != confirmPassword) toast.error("Passwords do not match");
       else {
@@ -61,24 +52,14 @@ const Register = () => {
           uploadBytes(imageRef, photo).then(() => {
             getDownloadURL(imageRef).then(async (res) => {
               try {
-                const addedUser = await register({
-                  name,
-                  surname,
-                  username,
-                  email,
-                  password,
-                  dateBirth,
-                  address,
-                  photo: res,
+                const addedUser = await register({ name, surname, username, email,
+                  password, dateBirth, address, photo: res,type_id: category,
+                  brand_id: brand,
                 }).unwrap();
                 if (addedUser.id != undefined) {
-                  const idd = addedUser.id;
-                  const userwithPreferences = await createPreferences({
-                    id: idd,
-                    type_id: category,
-                    brand_id: brand,
-                  }).unwrap();
-                  toast.success("Added user " + addedUser.id + " successfully");
+                  toast.success(
+                    "Added user " + addedUser.username + " successfully"
+                  );
                   navigate(redirect);
                 } else {
                   toast.error("Registration failed: User data is undefined.");

@@ -9,11 +9,11 @@ const {
   logoutUser,
   createPrefereces,
 } = require("../controllers/userController");
+const router = express.Router();
 const {
   authenticate,
   authorizedAdmin,
 } = require("../middlewares/authMiddleware");
-const router = express.Router();
 router.get("/:id", getUserById);
 router.get("/", authenticate, authorizedAdmin, getAllUsers);
 router.post("/", createUser);

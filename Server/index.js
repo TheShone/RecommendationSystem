@@ -12,6 +12,7 @@ const ratingRouter = require("./src/routes/ratings");
 const recommendationRouter = require("./src/routes/recommendations");
 const orderRouter = require("./src/routes/orders");
 const cookieParser = require("cookie-parser");
+const batchScirpt = require("./src/routes/batrchScriptR");
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -34,6 +35,7 @@ app.use("/purchaseHistory", purchaseHistoryRouter);
 app.use("/ratings", ratingRouter);
 app.use("/orders", orderRouter);
 app.use("/recommendation", recommendationRouter);
+app.use("/similarUsers", batchScirpt);
 app.get("/", (req, res) => {
   res.send("Hallo World");
 });

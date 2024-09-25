@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import ProductCarousel from "../pages/Products/ProductCarousel";
 const Header = () => {
   const { data, isLoading, error } = useTopProductsQuery();
+  console.log(data);
   if (isLoading) {
     return <Loader />;
   }
@@ -23,7 +24,7 @@ const Header = () => {
             ))}
           </div>
         </div>
-        <ProductCarousel/>
+        <ProductCarousel />
       </div>
     </>
   );

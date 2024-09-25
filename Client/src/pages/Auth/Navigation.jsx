@@ -62,6 +62,7 @@ const Navigation = () => {
       id="navigation-container"
     >
       <div className="flex flex-col justify-center space-y-2">
+      {(!userInfo || (userInfo && userInfo.role != "admin")) && (
         <Link
           to="/"
           className="flex items-center transition-transform transform hover:translate-x-1"
@@ -69,7 +70,9 @@ const Navigation = () => {
           <AiOutlineHome className="mr-2 mt-[2rem]" size={26} />
           <span className="hidden nav-item-name mt-[2rem]">Home</span>{" "}
         </Link>
-
+      )}
+      {(!userInfo || (userInfo && userInfo.role != "admin")) && (
+        <>
         <Link
           to="/shop"
           className="flex items-center transition-transform transform hover:translate-x-2"
@@ -77,14 +80,16 @@ const Navigation = () => {
           <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">Shop</span>{" "}
         </Link>
-
         <div className="">
-          {cartItems?.length > 0 && (
-            <span className="px-1 py-0 text-sm text-white bg-red-500 rounded-full mr-[2rem] absolute mt-[2.5rem]">
-              {cartItems.reduce((acc, product) => acc + product.qty, 0)}
-            </span>
-          )}
-        </div>
+        {cartItems?.length > 0 && (
+          <span className="px-1 py-0 text-sm text-white bg-red-500 rounded-full mr-[2rem] absolute mt-[2.5rem]">
+            {cartItems.reduce((acc, product) => acc + product.qty, 0)}
+          </span>
+        )}
+      </div>
+      </>
+      )}
+        {(!userInfo || (userInfo && userInfo.role != "admin")) && (
         <Link
           to="/cart"
           className="flex items-center transition-transform transform hover:translate-x-2"
@@ -92,6 +97,7 @@ const Navigation = () => {
           <AiOutlineShoppingCart className="mr-2 mt-[3rem]" size={26} />
           <span className="hidden nav-item-name mt-[3rem]">Cart</span>{" "}
         </Link>
+        )}
         {userInfo && userInfo.role != "admin" && (
           <Link
             to="/userorders"

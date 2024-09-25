@@ -65,7 +65,7 @@ const ProductCarousel = () => {
                 <img
                   src={photo}
                   alt={name}
-                  className="w-full rounded-lg object-cover h-[30rem]"
+                  className="w-full rounded-lg object-contain max-h-[30rem]"
                 />
                 <div className="flex justufy-between w-[20rem] pl-[2rem]">
                   <div className="one">

@@ -67,23 +67,13 @@ async function getUserByEmail(email) {
   });
 }
 
-async function createUser(
-  name,
-  surname,
-  username,
-  email,
-  password,
-  dateBirth,
-  address,
-  photo,
-  role,
-  type_id,
-  brand_id
+async function createUser(name,surname,username,email,password,dateBirth,address,photo,role,type_id,brand_id
 ) {
   return new Promise(async (resolve, reject) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     pool.query(
-      `INSERT INTO users (name, surname, username, email, password, datebirth, address, photo, role, type_id,brand_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`,
+      `INSERT INTO users (name, surname, username, email, password, datebirth, address, photo, role, type_id,brand_id) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`,
       [
         name,
         surname,

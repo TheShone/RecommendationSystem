@@ -105,7 +105,8 @@ const BrandsList = () => {
         />
         <br />
         <hr />
-        <div className="flex wrap">
+        <div className="mt-6 w-1/2">
+          <div className="grid grid-cols-2 gap-2">
           {attributes?.map((attribute) => (
             <div key={attribute.id}>
               <button
@@ -122,7 +123,9 @@ const BrandsList = () => {
                 {attribute.categorie}: {attribute.attributename}
               </button>
             </div>
+           
           ))}
+          </div>
         </div>
         <Modal isOpen={modalVisible} onClose={() => setModelVisible(false)}>
           <AttributeForm
