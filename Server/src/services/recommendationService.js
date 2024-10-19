@@ -124,7 +124,6 @@ async function recommendBasedOnHistory(userId, conn) {
           });
         }
       }
-
       const finalRecommendations = Array.from(productMap.values());
       if (finalRecommendations.length > 0) {
         resolve(finalRecommendations);
@@ -151,7 +150,6 @@ async function recommendForNewUser(userId, conn) {
         if (err) {
           return reject(err);
         }
-
         if (!userPreferences || userPreferences.length === 0) {
           console.log("Nema preferencija za korisnika");
           return resolve([]);
