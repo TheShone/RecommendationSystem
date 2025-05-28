@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDlaAoiEKuQf3NM_9ouFQlpq3xLqEjl7Yo",
+  apiKey: "***********************",
   authDomain: "recommendationsystem-ae8b5.firebaseapp.com",
   projectId: "recommendationsystem-ae8b5",
   storageBucket: "recommendationsystem-ae8b5.appspot.com",
